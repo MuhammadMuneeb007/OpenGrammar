@@ -1,3 +1,4 @@
+```markdown
 <div align="center">
   <img src="logo.PNG" alt="OpenGrammar Logo">
 
@@ -39,3 +40,70 @@ Visit **[edtechtools.me](https://edtechtools.me)** to use OpenGrammar instantly!
 cd Backend
 python app.py
 # Use ngrok for proxy tunnel
+```
+
+**Frontend:**
+```bash
+cd Final
+# Open index.html in browser
+# Update the ngrok link in modern_grammar_checker_js.js
+```
+
+> **Note:** You'll need a Google Gemini API key from Google AI Studio.
+
+---
+
+## 📖 How to Use
+
+1. **Write or paste** your text (up to 10,000 characters)
+2. **Click "Check Grammar"** for comprehensive analysis
+3. **Review suggestions** with detailed explanations
+4. **Accept changes** with one-click corrections
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+- 🐛 **Report bugs** via [GitHub Issues](https://github.com/muhammadmuneeb007/opengrammar/issues)
+- 💡 **Suggest features** 
+- 🔧 **Submit code** improvements
+- 📝 **Improve documentation**
+
+### Development Setup
+```bash
+git clone https://github.com/muhammadmuneeb007/opengrammar.git
+cd opengrammar
+# Follow setup instructions above
+```
+
+---
+
+## 📞 Support
+
+- 🌐 **Website**: [edtechtools.me](https://edtechtools.me)
+- 💬 **Issues**: [GitHub Issues](https://github.com/muhammadmuneeb007/opengrammar/issues)
+- 📧 **Contact**: muneebsiddique007@gmail.com
+
+---
+
+## 📜 License
+
+MIT License - Feel free to use, modify, and distribute!
+
+---
+
+<div align="center">
+  
+  ### 🌟 **Made with ❤️ for the writing community** 🌟
+  
+  [![Try Now](https://img.shields.io/badge/Try%20Now-edtechtools.me-blue?style=for-the-badge)](https://edtechtools.me)
+  [![GitHub stars](https://img.shields.io/github/stars/muhammadmuneeb007/opengrammar?style=social)](https://github.com/muhammadmuneeb007/opengrammar)
+  
+  *Happy Writing! ✍️*
+  
+</div>
+```
+
+ 
