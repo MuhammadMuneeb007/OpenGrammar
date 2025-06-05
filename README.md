@@ -1,6 +1,6 @@
  
 <div align="center">
-  <img src="logo.PNG" alt="OpenGrammar Logo" width="150" height="150">
+  <img src="logo.PNG" alt="OpenGrammar Logo" width="200" height="150">
 
   # 🖋️ OpenGrammar
   ### AI-Powered Writing Assistant & Grammar Checker
@@ -18,13 +18,7 @@
   </video>
 </div>
 
----
 
-## ⭐ Star History
-
-<div align="center">
-  <img src="https://api.star-history.com/svg?repos=muhammadmuneeb007/opengrammar&type=Date" alt="Star History Chart" width="600">
-</div>
 
 ---
 
@@ -115,4 +109,10 @@ MIT License - Feel free to use, modify, and distribute!
   *Happy Writing! ✍️*
   
 </div>
- 
+ ---
+
+## ⭐ Star History
+
+<div align="center">
+  <img src="https://api.star-history.com/svg?repos=muhammadmuneeb007/opengrammar&type=Date" alt="Star History Chart" width="600">
+</div>
