@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.PNG" alt="OpenGrammar Logo" width="230" height="150">
+  <img src="logo.PNG" alt="OpenGrammar Logo" width="220" height="150">
 
   <h1>🖋️ OpenGrammar</h1>
   <h3>AI-Powered Writing Assistant & Grammar Checker</h3>
@@ -21,19 +21,16 @@
 
   <p><strong>✨ Open source grammar checker powered by AI ✨</strong></p>
 
+  <!-- Video -->
   <video width="800" controls>
     <source src="Video.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
-  <!-- Fallback thumbnail -->
-  <!--
-  <a href="Video.mp4">
-    <img src="video-thumbnail.png" alt="Watch Demo Video" width="800">
-    <br>
-    🎥 Click to watch demo video
-  </a>
-  -->
+  <br><br>
+
+  <!-- GIF -->
+  <img src="Gif.gif" alt="Demo Animation" width="800">
 </div>
 
  
