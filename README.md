@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.PNG" alt="OpenGrammar Logo" width="220" height="150">
+  <img src="logo.PNG" alt="OpenGrammar Logo" width="250" height="150">
 
   <h1>🖋️ OpenGrammar</h1>
   <h3>AI-Powered Writing Assistant & Grammar Checker</h3>
