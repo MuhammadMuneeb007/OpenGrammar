@@ -130,3 +130,7 @@ MIT License - Feel free to use, modify, and distribute!
 <div align="center">
   <img src="https://api.star-history.com/svg?repos=muhammadmuneeb007/opengrammar&type=Date" alt="Star History Chart" width="600">
 </div>
+
+
+> **Note:**  
+> Thanks to David B. Ascher for providing the opportunity to explore AI stuff. :XD:
