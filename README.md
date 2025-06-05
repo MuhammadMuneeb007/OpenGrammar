@@ -1,6 +1,6 @@
  
 <div align="center">
-  <img src="logo.PNG" alt="OpenGrammar Logo" width="200" height="150">
+  <img src="logo.PNG" alt="OpenGrammar Logo" width="220" height="150">
 
   # 🖋️ OpenGrammar
   ### AI-Powered Writing Assistant & Grammar Checker
@@ -16,6 +16,12 @@
     <source src="Video.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
+
+    <!-- <a href="Video.mp4">
+    <img src="video-thumbnail.png" alt="Watch Demo Video" width="800">
+    <br>
+    🎥 Click to watch demo video
+  </a> -->
 </div>
 
 
