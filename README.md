@@ -36,19 +36,7 @@
   -->
 </div>
 
- <video width="800" controls>
-    <source src="Video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-
-  <!-- Fallback thumbnail -->
-  <!--
-  <a href="Video.mp4">
-    <img src="video-thumbnail.png" alt="Watch Demo Video" width="800">
-    <br>
-    🎥 Click to watch demo video
-  </a>
-
+ 
 ---
 
 ## 🌟 Features
