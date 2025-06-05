@@ -1,4 +1,4 @@
-GOOGLE_API_KEY = "AIzaSyBl53qgFn7_TurGJfYiUxD8anYJl9yRM-c"
+GOOGLE_API_KEY = "YOUR GOOGLE API"
 from flask import Flask, render_template, request, jsonify, session
 from flask_cors import CORS  # Add this import for CORS support
 import os
