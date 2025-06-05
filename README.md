@@ -1,4 +1,4 @@
-```markdown
+ 
 <div align="center">
   <img src="logo.PNG" alt="OpenGrammar Logo">
 
