@@ -1,27 +1,39 @@
- 
 <div align="center">
   <img src="logo.PNG" alt="OpenGrammar Logo" width="220" height="150">
 
-  # 🖋️ OpenGrammar
-  ### AI-Powered Writing Assistant & Grammar Checker
-  
-  [![Website](https://img.shields.io/badge/Website-edtechtools.me-blue?style=for-the-badge&logo=firefox&logoColor=white)](https://edtechtools.me)
-  [![GitHub stars](https://img.shields.io/github/stars/muhammadmuneeb007/opengrammar?style=for-the-badge&logo=github)](https://github.com/muhammadmuneeb007/opengrammar/stargazers)
-  [![Open Source](https://img.shields.io/badge/Open%20Source-❤️-red?style=for-the-badge)](https://github.com/muhammadmuneeb007/opengrammar)
-  [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-  
-  **✨ Open source grammar checker powered by AI ✨**
-  
+  <h1>🖋️ OpenGrammar</h1>
+  <h3>AI-Powered Writing Assistant & Grammar Checker</h3>
+
+  <p>
+    <a href="https://edtechtools.me">
+      <img src="https://img.shields.io/badge/Website-edtechtools.me-blue?style=for-the-badge&logo=firefox&logoColor=white" alt="Website">
+    </a>
+    <a href="https://github.com/muhammadmuneeb007/opengrammar/stargazers">
+      <img src="https://img.shields.io/github/stars/muhammadmuneeb007/opengrammar?style=for-the-badge&logo=github" alt="GitHub stars">
+    </a>
+    <a href="https://github.com/muhammadmuneeb007/opengrammar">
+      <img src="https://img.shields.io/badge/Open%20Source-❤️-red?style=for-the-badge" alt="Open Source">
+    </a>
+    <a href="LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+    </a>
+  </p>
+
+  <p><strong>✨ Open source grammar checker powered by AI ✨</strong></p>
+
   <video width="800" controls>
     <source src="Video.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
-    <!-- <a href="Video.mp4">
+  <!-- Fallback thumbnail -->
+  <!--
+  <a href="Video.mp4">
     <img src="video-thumbnail.png" alt="Watch Demo Video" width="800">
     <br>
     🎥 Click to watch demo video
-  </a> -->
+  </a>
+  -->
 </div>
 
 
