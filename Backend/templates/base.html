@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}OpenGrammar - Smart Grammar Checker{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OpenGrammar - Free Open Source Grammar Checking Tool">
+    <meta name="keywords" content="grammar checker, spelling, proofreading, writing tool">
+    
+    <!-- Tailwind CDN for modern UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Inter for modern UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.PNG') }}">
+    
+    {% block extra_css %}
+    <style>
+      /* Modern UI Base Styles */
+      :root {
+        --primary: #3b82f6;
+        --primary-dark: #2563eb; 
+        --secondary: #ec4899;
+        --accent: #8b5cf6;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+      }
+      
+      body { 
+        font-family: 'Inter', sans-serif;
+        background-color: #fafafa;
+        color: #334155;
+      }
+      
+      /* Glass morphism effect */
+      .glass {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 8px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #94a3b8;
+      }
+      
+      /* Modern buttons with hover effects */
+      .btn {
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      
+      .btn-outline {
+        background-color: transparent;
+        color: var(--dark);
+        border: 1px solid #e2e8f0;
+      }
+      
+      .btn-outline:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+      }
+      
+      /* Modal styling */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        overflow: auto;
+        padding: 1rem;
+        transition: opacity 0.3s ease;
+        opacity: 0;
+      }
+      
+      .modal.active {
+        opacity: 1;
+      }
+      
+      .modal-content {
+        background-color: white;
+        margin: 2rem auto;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        width: 95%;
+        max-width: 600px;
+        position: relative;
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.3s ease-out;
+      }
+      
+      .modal.active .modal-content {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      
+      /* Form control styling */
+      .form-control {
+        margin-bottom: 1.25rem;
+      }
+      
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--dark);
+        font-size: 0.875rem;
+      }
+      
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        background-color: #f8fafc;
+      }
+      
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background-color: white;
+      }
+      
+      .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      
+      /* Social media buttons */
+      .social-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: all 0.2s;
+      }
+      
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* Icons with gradient */
+      .icon-gradient {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      /* Custom badge */
+      .badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+      
+      /* Stats counter animation */
+      @keyframes countUp {
+        from { opacity: 0.5; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .counter-animation {
+        animation: countUp 0.5s ease forwards;
+      }
+    </style>
+    {% endblock %}
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#3b82f6',
+              secondary: '#ec4899',
+              accent: '#8b5cf6',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <!-- Blurred header with modern design -->
+    <header class="sticky top-0 z-50">
+        <div class="glass backdrop-blur border-b border-gray-200/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <!-- Logo with modern gradient -->
+                    <a href="/" class="flex items-center space-x-3 group">
+                        <div class="relative">
+                            <img src="{{ url_for('static', filename='logo.PNG') }}" alt="OpenGrammar" 
+                                class="h-10 w-auto transition-transform duration-300 group-hover:scale-110 relative z-10">
+                            <div class="absolute inset-0 bg-blue-400 rounded-full blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-violet-500 bg-clip-text text-transparent">
+                                OpenGrammar
+                            </span>
+                            <span class="text-xs text-gray-500">Open Source Grammar Checker</span>
+                        </div>
+                    </a>
+                    
+                    <!-- Modern navigation -->
+                    <nav class="flex items-center space-x-1 sm:space-x-2">
+                        <button id="aboutBtn" class="btn btn-outline text-sm px-3 sm:px-4 py-2">
+                            <span class="hidden sm:inline">About</span>
+                            <i class="fas fa-info-circle sm:ml-1"></i>
+                        </button>
+                        <button id="contactBtn" class="btn btn-outline text-sm px-3 sm:px-4 py-2">
+                            <span class="hidden sm:inline">Contact</span>
+                            <i class="fas fa-envelope sm:ml-1"></i>
+                        </button>
+                        <button id="shareBtn" class="btn btn-primary text-sm px-3 sm:px-4 py-2">
+                            <span class="hidden sm:inline">Share</span>
+                            <i class="fas fa-share-alt sm:ml-1"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Modern Footer -->
+    <footer class="bg-white border-t border-gray-200 pt-12 pb-8 relative">
+        <!-- Curved separator for modern look -->
+        <div class="absolute top-0 left-0 w-full overflow-hidden" style="transform: translateY(-99%)">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="fill-white h-16 w-full">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C98,19.48,203.09,56.44,321.39,56.44Z"></path>
+            </svg>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- About column -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">About OpenGrammar</h3>
+                    <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                        OpenGrammar is a free, open-source grammar checking tool designed to help you improve your writing with advanced AI analysis.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="https://twitter.com/share?url=https://opengrammar.io" target="_blank" class="social-btn bg-[#1DA1F2]">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://opengrammar.io" target="_blank" class="social-btn bg-[#1877F2]">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://opengrammar.io" target="_blank" class="social-btn bg-[#0A66C2]">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/yourusername/opengrammar" target="_blank" class="social-btn bg-[#24292F]">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Contact column -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Contact</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center h-8 w-8 rounded-md bg-gradient-to-r from-blue-600 to-violet-500 text-white mr-3">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Email</p>
+                                <a href="mailto:muneebsiddique007@gmail.com" class="text-sm text-gray-700 hover:text-blue-600 transition-colors">
+                                    muneebsiddique007@gmail.com
+                                </a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center h-8 w-8 rounded-md bg-gradient-to-r from-blue-600 to-violet-500 text-white mr-3">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Developer</p>
+                                <p class="text-sm text-gray-700">Muhammad Muneeb</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center h-8 w-8 rounded-md bg-gradient-to-r from-blue-600 to-violet-500 text-white mr-3">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Location</p>
+                                <p class="text-sm text-gray-700">Queensland, Australia</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Stats column -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Statistics</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <i class="fas fa-users text-lg text-blue-500 mr-3"></i>
+                                    <span class="text-sm text-gray-700">Unique Visitors</span>
+                                </div>
+                                <span class="text-lg font-semibold text-gray-900" id="visitorCount">15,487</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-alt text-lg text-purple-500 mr-3"></i>
+                                    <span class="text-sm text-gray-700">Documents Checked</span>
+                                </div>
+                                <span class="text-lg font-semibold text-gray-900" id="documentsChecked">124,932</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-lg text-green-500 mr-3"></i>
+                                    <span class="text-sm text-gray-700">Errors Fixed</span>
+                                </div>
+                                <span class="text-lg font-semibold text-gray-900" id="errorsFixed">3,459,827</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer bottom -->
+            <div class="border-t border-gray-200 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-500 mb-4 md:mb-0">&copy; 2025 OpenGrammar - Open Source Grammar Checking Tool</p>
+                <div class="flex space-x-6">
+                    <button id="privacyBtn" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Privacy Policy</button>
+                    <button id="termsBtn" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Terms of Service</button>
+                    <button id="cookieBtn" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Cookie Policy</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Modals with modern design -->
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="aboutModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">About OpenGrammar</h2>
+                <p class="text-sm text-gray-500">Free Open Source Grammar Checking Tool</p>
+            </div>
+            <div class="space-y-4">
+                <p class="text-gray-600">OpenGrammar is a free, open-source grammar checking tool designed to help writers, students, and professionals improve their writing.</p>
+                <p class="text-gray-600">Our tool uses advanced AI to analyze text for grammatical errors, style issues, and readability problems, providing specific suggestions to enhance your writing.</p>
+                
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Key Features</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Grammar and spelling correction</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Style and tone analysis</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Readability assessment</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Document structure analysis</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Support for multiple file formats</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 mt-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Open Source</h3>
+                    <p class="text-gray-600 mb-4">OpenGrammar is proudly open source. We believe in transparency and community collaboration. Feel free to contribute to our project on GitHub!</p>
+                    <a href="https://github.com/yourusername/opengrammar" target="_blank" class="btn btn-primary inline-flex items-center">
+                        <i class="fab fa-github mr-2"></i> View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="contactModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Contact Us</h2>
+                <p class="text-sm text-gray-500">We'd love to hear from you</p>
+            </div>
+            
+            <p class="text-gray-600 mb-6">Have questions or feedback? Send us a message and we'll get back to you as soon as possible.</p>
+            
+            <form id="contactForm" class="space-y-4">
+                <div class="form-control">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" name="name" class="form-input" required>
+                </div>
+                <div class="form-control">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-input" required>
+                </div>
+                <div class="form-control">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" id="subject" name="subject" class="form-input" required>
+                </div>
+                <div class="form-control">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea id="message" name="message" class="form-textarea" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-full py-3">
+                    <i class="fas fa-paper-plane mr-2"></i> Send Message
+                </button>
+            </form>
+            
+            <div class="mt-6 py-4 border-t border-gray-200 text-center">
+                <p class="text-sm text-gray-500 mb-1">Or email us directly at:</p>
+                <a href="mailto:muneebsiddique007@gmail.com" class="text-blue-600 font-medium hover:text-blue-700 transition-colors">
+                    muneebsiddique007@gmail.com
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="shareModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Share OpenGrammar</h2>
+                <p class="text-sm text-gray-500">Help others improve their writing</p>
+            </div>
+            
+            <p class="text-gray-600 mb-6">Share OpenGrammar with friends, colleagues, or students who might benefit from better writing:</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <a href="https://twitter.com/share?url=https://opengrammar.io&text=Check out OpenGrammar, a free open-source grammar checking tool!" target="_blank" class="flex items-center justify-center p-4 rounded-lg bg-[#1DA1F2] text-white hover:bg-opacity-90 transition-all">
+                    <i class="fab fa-twitter text-xl mr-3"></i>
+                    <span>Twitter</span>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://opengrammar.io" target="_blank" class="flex items-center justify-center p-4 rounded-lg bg-[#1877F2] text-white hover:bg-opacity-90 transition-all">
+                    <i class="fab fa-facebook-f text-xl mr-3"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://opengrammar.io&title=OpenGrammar - Free Grammar Checker" target="_blank" class="flex items-center justify-center p-4 rounded-lg bg-[#0A66C2] text-white hover:bg-opacity-90 transition-all">
+                    <i class="fab fa-linkedin-in text-xl mr-3"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://api.whatsapp.com/send?text=Check out OpenGrammar, a free open-source grammar checking tool! https://opengrammar.io" target="_blank" class="flex items-center justify-center p-4 rounded-lg bg-[#25D366] text-white hover:bg-opacity-90 transition-all">
+                    <i class="fab fa-whatsapp text-xl mr-3"></i>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <p class="text-sm font-medium text-gray-700 mb-2">Or copy this link:</p>
+                <div class="flex rounded-lg overflow-hidden border border-gray-200">
+                    <input type="text" value="https://opengrammar.io" class="w-full py-2 px-3 outline-none bg-white" readonly id="shareLink">
+                    <button onclick="copyShareLink()" id="copyLinkBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 flex items-center justify-center transition-colors">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Privacy Policy Modal (simplified) -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="privacyModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Privacy Policy</h2>
+                <p class="text-sm text-gray-500">Last updated: February 2025</p>
+            </div>
+            
+            <div class="h-[60vh] overflow-y-auto pr-2 text-gray-600 space-y-6">
+                <!-- Privacy content here -->
+                <p>At OpenGrammar, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your information when you use our service.</p>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Information We Collect</h3>
+                    <p class="mb-2">We collect minimal information necessary to provide our service:</p>
+                    <ul class="space-y-1 ml-5 list-disc">
+                        <li>Text content you submit for grammar checking</li>
+                        <li>Basic usage statistics to improve our service</li>
+                        <li>Optional contact information if you reach out to us</li>
+                    </ul>
+                </div>
+                
+                <!-- Additional sections would go here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Terms of Service Modal (simplified) -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="termsModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Terms of Service</h2>
+                <p class="text-sm text-gray-500">Last updated: February 2025</p>
+            </div>
+            
+            <div class="h-[60vh] overflow-y-auto pr-2 text-gray-600 space-y-6">
+                <!-- Terms content here -->
+                <p>By accessing or using OpenGrammar, you agree to be bound by these Terms of Service.</p>
+                
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">Service Description</h3>
+                  <p>OpenGrammar provides grammar checking and text analysis services. Our service is provided "as is" without warranties of any kind.</p>
+              </div>
+              
+              <div>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">User Conduct</h3>
+                  <p class="mb-2">You agree not to:</p>
+                  <ul class="space-y-1 ml-5 list-disc">
+                      <li>Use our service for any illegal purpose</li>
+                      <li>Attempt to bypass or breach our security measures</li>
+                      <li>Share harmful, offensive, or inappropriate content</li>
+                      <li>Interfere with the proper functioning of the service</li>
+                  </ul>
+              </div>
+              
+              <!-- Additional sections would go here -->
+          </div>
+      </div>
+  </div>
+  
+  <!-- Cookie Policy Modal (simplified) -->
+  <div id="cookieModal" class="modal">
+      <div class="modal-content">
+          <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="cookieModal">
+              <i class="fas fa-times"></i>
+          </span>
+          <div class="mb-6 pb-2 border-b border-gray-200">
+              <h2 class="text-2xl font-bold text-gray-800">Cookie Policy</h2>
+              <p class="text-sm text-gray-500">Last updated: February 2025</p>
+          </div>
+          
+          <div class="h-[60vh] overflow-y-auto pr-2 text-gray-600 space-y-6">
+              <!-- Cookie content here -->
+              <p>This Cookie Policy explains how OpenGrammar uses cookies and similar technologies.</p>
+              
+              <div>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">What Are Cookies</h3>
+                  <p>Cookies are small text files stored on your device when you visit websites. They help remember your preferences and improve your browsing experience.</p>
+              </div>
+              
+              <!-- Additional sections would go here -->
+          </div>
+      </div>
+  </div>
+  
+  <!-- Modern notification toast -->
+  <div id="toast" class="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 flex items-center transform translate-y-24 opacity-0 transition-all duration-300 z-50 max-w-xs">
+      <div id="toastIcon" class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+          <i id="toastIconType" class="fas fa-check-circle text-xl"></i>
+      </div>
+      <div class="flex-1">
+          <h3 id="toastTitle" class="font-medium text-gray-900 text-sm"></h3>
+          <p id="toastMessage" class="text-gray-600 text-xs mt-1"></p>
+      </div>
+      <button onclick="hideToast()" class="ml-4 text-gray-400 hover:text-gray-600">
+          <i class="fas fa-times"></i>
+      </button>
+  </div>
+  
+  <!-- JavaScript for functionality -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Modal functionality
+      const modalButtons = {
+          'aboutBtn': 'aboutModal',
+          'contactBtn': 'contactModal',
+          'shareBtn': 'shareModal',
+          'privacyBtn': 'privacyModal',
+          'termsBtn': 'termsModal',
+          'cookieBtn': 'cookieModal'
+      };
+      
+      // Open modal when button is clicked
+      Object.keys(modalButtons).forEach(btn => {
+          const button = document.getElementById(btn);
+          const modal = document.getElementById(modalButtons[btn]);
+          
+          if (button && modal) {
+              button.addEventListener('click', () => {
+                  modal.style.display = 'block';
+                  setTimeout(() => {
+                      modal.classList.add('active');
+                  }, 10);
+              });
+          }
+      });
+      
+      // Close modal when X is clicked
+      const closeButtons = document.querySelectorAll('.close-modal');
+      closeButtons.forEach(button => {
+          button.addEventListener('click', () => {
+              const modal = document.getElementById(button.getAttribute('data-modal'));
+              modal.classList.remove('active');
+              setTimeout(() => {
+                  modal.style.display = 'none';
+              }, 300);
+          });
+      });
+      
+      // Close modal when clicking outside
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+          modal.addEventListener('click', (e) => {
+              if (e.target === modal) {
+                  modal.classList.remove('active');
+                  setTimeout(() => {
+                      modal.style.display = 'none';
+                  }, 300);
+              }
+          });
+      });
+      
+      // Contact form submission
+      const contactForm = document.getElementById('contactForm');
+      if (contactForm) {
+          contactForm.addEventListener('submit', function(e) {
+              e.preventDefault();
+              const name = document.getElementById('name').value;
+              const email = document.getElementById('email').value;
+              const subject = document.getElementById('subject').value;
+              const message = document.getElementById('message').value;
+              
+              // Create mailto link
+              const mailtoLink = `mailto:muneebsiddique007@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+              window.location.href = mailtoLink;
+              
+              // Reset form
+              contactForm.reset();
+              
+              // Show success toast
+              showToast('success', 'Message Sent', 'Thanks for contacting us. We\'ll respond soon!');
+              
+              // Close modal
+              const modal = document.getElementById('contactModal');
+              modal.classList.remove('active');
+              setTimeout(() => {
+                  modal.style.display = 'none';
+              }, 300);
+          });
+      }
+      
+      // Visitor counter animation
+      const statsElements = ['visitorCount', 'documentsChecked', 'errorsFixed'];
+      
+      statsElements.forEach(id => {
+          const element = document.getElementById(id);
+          if (element) {
+              // Parse the initial value and save it
+              const initialValue = parseInt(element.textContent.replace(/,/g, ''));
+              element.setAttribute('data-value', initialValue);
+              
+              // Animate the counter every 15 seconds
+              setInterval(() => {
+                  animateCounter(id);
+              }, 15000);
+          }
+      });
+  });
+  
+  // Counter animation function
+  function animateCounter(id) {
+      const element = document.getElementById(id);
+      const currentValue = parseInt(element.getAttribute('data-value'));
+      
+      // Generate random increment based on counter type
+      let increment;
+      switch(id) {
+          case 'visitorCount':
+              increment = Math.floor(Math.random() * 6) + 1; // 1-6
+              break;
+          case 'documentsChecked':
+              increment = Math.floor(Math.random() * 20) + 5; // 5-25
+              break;
+          case 'errorsFixed':
+              increment = Math.floor(Math.random() * 100) + 50; // 50-150
+              break;
+          default:
+              increment = 1;
+      }
+      
+      const newValue = currentValue + increment;
+      
+      // Save the new value
+      element.setAttribute('data-value', newValue);
+      
+      // Apply animation class
+      element.classList.remove('counter-animation');
+      void element.offsetWidth; // Trigger reflow
+      element.classList.add('counter-animation');
+      
+      // Update the displayed value
+      element.textContent = newValue.toLocaleString();
+  }
+  
+  // Function to copy share link
+  function copyShareLink() {
+      const shareLink = document.getElementById('shareLink');
+      shareLink.select();
+      shareLink.setSelectionRange(0, 99999); // For mobile devices
+      
+      navigator.clipboard.writeText(shareLink.value)
+          .then(() => {
+              // Show success toast
+              showToast('success', 'Link Copied', 'Link has been copied to clipboard!');
+              
+              // Visual feedback on the button
+              const copyLinkBtn = document.getElementById('copyLinkBtn');
+              const originalIcon = copyLinkBtn.innerHTML;
+              copyLinkBtn.innerHTML = '<i class="fas fa-check"></i>';
+              
+              setTimeout(() => {
+                  copyLinkBtn.innerHTML = originalIcon;
+              }, 2000);
+          })
+          .catch(err => {
+              // Fallback to old method
+              document.execCommand('copy');
+              showToast('success', 'Link Copied', 'Link has been copied to clipboard!');
+          });
+  }
+  
+  // Toast notification functions
+  function showToast(type, title, message) {
+      const toast = document.getElementById('toast');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastIconType = document.getElementById('toastIconType');
+      
+      // Set content
+      toastTitle.textContent = title;
+      toastMessage.textContent = message;
+      
+      // Set style based on type
+      if (type === 'success') {
+          toastIcon.className = 'flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-green-100';
+          toastIconType.className = 'fas fa-check-circle text-xl text-green-500';
+      } else if (type === 'error') {
+          toastIcon.className = 'flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-red-100';
+          toastIconType.className = 'fas fa-exclamation-circle text-xl text-red-500';
+      } else if (type === 'info') {
+          toastIcon.className = 'flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-blue-100';
+          toastIconType.className = 'fas fa-info-circle text-xl text-blue-500';
+      }
+      
+      // Show toast
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      
+      // Auto hide after 5 seconds
+      setTimeout(hideToast, 5000);
+  }
+  
+  function hideToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('translate-y-24', 'opacity-0');
+  }
+  </script>
+</body>
+</html>

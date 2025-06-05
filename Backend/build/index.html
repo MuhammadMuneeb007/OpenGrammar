@@ -1,0 +1,2788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OpenGrammar - Grammar Checker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OpenGrammar - Free Open Source Grammar Checking Tool">
+    <meta name="keywords" content="grammar checker, spelling, proofreading, writing tool">
+    
+    <!-- Tailwind CDN for modern UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Inter for modern UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link rel="icon" type="image/png" href="/static/logo.PNG">
+    
+    
+
+    <style>
+      /* Modern UI Base Styles */
+      :root {
+        --primary: #3b82f6;
+        --primary-dark: #2563eb; 
+        --secondary: #ec4899;
+        --accent: #8b5cf6;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+      }
+      
+      body { 
+        font-family: 'Inter', sans-serif;
+        background-color: #fafafa;
+        color: #334155;
+      }
+      
+      /* Glass morphism effect */
+      .glass {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 8px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #94a3b8;
+      }
+      
+      /* Modern buttons with hover effects */
+      .btn {
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      
+      .btn-outline {
+        background-color: transparent;
+        color: var(--dark);
+        border: 1px solid #e2e8f0;
+      }
+      
+      .btn-outline:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+      }
+      
+      /* Modal styling */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        overflow: auto;
+        padding: 1rem;
+        transition: opacity 0.3s ease;
+        opacity: 0;
+      }
+      
+      .modal.active {
+        opacity: 1;
+      }
+      
+      .modal-content {
+        background-color: white;
+        margin: 2rem auto;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        width: 95%;
+        max-width: 600px;
+        position: relative;
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.3s ease-out;
+      }
+      
+      .modal.active .modal-content {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      
+      /* Form control styling */
+      .form-control {
+        margin-bottom: 1.25rem;
+      }
+      
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--dark);
+        font-size: 0.875rem;
+      }
+      
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        background-color: #f8fafc;
+      }
+      
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background-color: white;
+      }
+      
+      .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      
+      /* Social media buttons */
+      .social-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: all 0.2s;
+      }
+      
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* Icons with gradient */
+      .icon-gradient {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      /* Custom badge */
+      .badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+      
+      /* Stats counter animation */
+      @keyframes countUp {
+        from { opacity: 0.5; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .counter-animation {
+        animation: countUp 0.5s ease forwards;
+      }
+    </style>
+    
+<style>
+    /* Modern Grammar Checker Styles with enhanced UI */
+    .main-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        max-width: 1800px;
+        margin: 0 auto;
+        height: calc(100vh - 12rem);
+    }
+
+    .editor-pane, .results-pane {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+    }
+
+    .editor-pane:hover, .results-pane:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .editor-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(to right, #f8fafc, #f1f5f9);
+    }
+
+    .editor-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .editor-title i {
+        color: #3b82f6;
+    }
+
+    .score-display {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .score-value {
+        font-weight: 600;
+        padding: 0.15rem 0.75rem;
+        border-radius: 9999px;
+        background: linear-gradient(to right, #ecfdf5, #d1fae5);
+        color: #059669;
+    }
+
+    .low-score {
+        background: linear-gradient(to right, #fee2e2, #fecaca);
+        color: #dc2626;
+    }
+
+    .medium-score {
+        background: linear-gradient(to right, #fef3c7, #fde68a);
+        color: #d97706;
+    }
+
+    .editor-content {
+        flex: 1;
+        padding: 1.5rem;
+        overflow: auto;
+        position: relative;
+    }
+
+    #inputText {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        resize: none;
+        font-size: 0.9375rem;
+        line-height: 1.8;
+        color: #1e293b;
+        background: transparent;
+        font-family: 'Inter', sans-serif;
+    }
+
+    #inputText::placeholder {
+        color: #94a3b8;
+    }
+
+    .highlight-error {
+        background-color: rgba(254, 202, 202, 0.2);
+        border-bottom: 2px solid #f87171;
+    }
+
+    .button-container {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .stats-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 0.875rem;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #64748b;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.5rem;
+        background-color: white;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-value {
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .writing-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 0.75rem 1.5rem;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .control-select {
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        border: 1px solid #e2e8f0;
+        font-size: 0.875rem;
+        color: #0f172a;
+        background-color: white;
+        transition: all 0.2s;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .control-select:focus {
+        border-color: #3b82f6;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    .copy-button {
+        padding: 0.375rem 0.75rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .copy-button:hover {
+        background: #f8fafc;
+        color: #1e293b;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    #corrections {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+    }
+
+    .correction-item {
+        background: linear-gradient(to right, #f8fafc, #f1f5f9);
+        border: 1px solid #e2e8f0;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+        transition: all 0.2s ease;
+    }
+
+    .correction-item:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+        border-color: #cbd5e1;
+        transform: translateY(-2px);
+    }
+
+    .correction-section {
+        margin-bottom: 1rem;
+    }
+
+    .correction-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .correction-label i {
+        color: #3b82f6;
+    }
+
+    .original-text {
+        color: #ef4444;
+        background-color: #fef2f2;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        border-left: 4px solid #f87171;
+    }
+
+    .corrected-text {
+        color: #10b981;
+        background-color: #ecfdf5;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        border-left: 4px solid #34d399;
+    }
+
+    .mistakes-list {
+        list-style-type: none;
+        font-size: 0.875rem;
+        color: #4b5563;
+        line-height: 1.6;
+        padding: 0;
+    }
+
+    .mistakes-list li {
+        display: flex;
+        gap: 0.5rem;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .mistakes-list li:last-child {
+        border-bottom: none;
+    }
+
+    .mistakes-list li i {
+        color: #f59e0b;
+        margin-top: 0.2rem;
+    }
+
+    .mistakes-list li strong {
+        color: #475569;
+    }
+
+    .correction-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+    }
+
+    .metrics-panel {
+        padding: 1.25rem 1.5rem;
+        background: linear-gradient(to right, #f8fafc, #f1f5f9);
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+
+    .metric-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+    }
+
+    .metric-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .metric-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .metric-value i {
+        color: #3b82f6;
+        font-size: 1rem;
+    }
+
+    .priority-list {
+        margin-top: 1.25rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.75rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .priority-list-header {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .priority-list-header i {
+        color: #3b82f6;
+    }
+
+    .priority-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .priority-item:last-child {
+        border-bottom: none;
+    }
+
+    .priority-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .priority-high {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .priority-medium {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .priority-low {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+    
+    /* Empty state styles */
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 2rem;
+        color: #64748b;
+        text-align: center;
+    }
+
+    .empty-state svg {
+        width: 64px;
+        height: 64px;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    /* Detailed analysis section */
+    .analysis-tabs {
+        display: flex;
+        border-bottom: 1px solid #e2e8f0;
+        background: #f8fafc;
+        padding: 0 1rem;
+    }
+    
+    .analysis-tab {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #64748b;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+    }
+    
+    .analysis-tab.active {
+        color: #3b82f6;
+        border-bottom-color: #3b82f6;
+    }
+    
+    .analysis-tab:hover:not(.active) {
+        color: #334155;
+        border-bottom-color: #cbd5e1;
+    }
+    
+    .analysis-content {
+        display: none;
+        padding: 1.5rem;
+        overflow-y: auto;
+    }
+    
+    .analysis-content.active {
+        display: block;
+    }
+    
+    .analysis-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .analysis-section-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .analysis-section-title i {
+        color: #3b82f6;
+    }
+    
+    .analysis-data {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .analysis-data-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed #e2e8f0;
+    }
+    
+    .analysis-data-item:last-child {
+        border-bottom: none;
+    }
+    
+    .analysis-data-label {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+    
+    .analysis-data-value {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #334155;
+    }
+    
+    .paragraph-analysis {
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: white;
+    }
+    
+    .paragraph-analysis-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .paragraph-analysis-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .paragraph-metric {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .paragraph-metric-label {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+    
+    .paragraph-metric-value {
+        font-size: 0.875rem;
+        color: #334155;
+    }
+    
+    .paragraph-suggestions {
+        margin-top: 0.75rem;
+        background: #f8fafc;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.8125rem;
+        color: #4b5563;
+    }
+
+    /* Loading animation */
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .main-container {
+            grid-template-columns: 1fr;
+            height: auto;
+            gap: 1rem;
+        }
+        
+        .editor-pane, .results-pane {
+            height: auto;
+            min-height: 60vh;
+        }
+    }
+
+    /* Synonym tooltip styles - FIXED */
+    .synonym-tooltip {
+        position: fixed;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        min-width: 180px;
+        max-width: 250px;
+        opacity: 0;
+        transform: translateY(-5px);
+        transition: opacity 0.2s, transform 0.2s;
+        display: none;
+    }
+
+    .synonym-tooltip.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .tooltip-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #f8fafc;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+
+    .tooltip-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #4b5563;
+    }
+
+    .close-tooltip {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #64748b;
+        font-size: 1rem;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .close-tooltip:hover {
+        color: #334155;
+    }
+
+    .synonym-list {
+        list-style: none;
+        padding: 0.5rem 0;
+        margin: 0;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .synonym-list li {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.875rem;
+        color: #4b5563;
+    }
+
+    .synonym-list li:hover {
+        background-color: #f3f4f6;
+        color: #3b82f6;
+    }
+
+    .loading-text, .error-text, .no-synonyms-text {
+        padding: 0.75rem 1rem;
+        color: #6b7280;
+        font-style: italic;
+        font-size: 0.875rem;
+        text-align: center;
+    }
+
+    .error-text {
+        color: #ef4444;
+    }
+
+    /* Toast notification */
+    .toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
+
+    .toast {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: translateX(120%);
+        transition: transform 0.3s ease;
+        max-width: 350px;
+    }
+
+    .toast.show {
+        transform: translateX(0);
+    }
+
+    .toast-success {
+        background-color: #10b981;
+    }
+
+    .toast-error {
+        background-color: #ef4444;
+    }
+
+    .toast-info {
+        background-color: #3b82f6;
+    }
+
+    .toast-icon {
+        margin-right: 0.75rem;
+    }
+
+    .toast-content {
+        flex: 1;
+    }
+
+    .toast-title {
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .toast-message {
+        font-size: 0.75rem;
+        opacity: 0.9;
+    }
+</style>
+
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#3b82f6',
+              secondary: '#ec4899',
+              accent: '#8b5cf6',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <!-- Blurred header with modern design -->
+    <header class="sticky top-0 z-50">
+        <div class="glass backdrop-blur border-b border-gray-200/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <!-- Logo with modern gradient -->
+                    <a href="/" class="flex items-center space-x-3 group">
+                        <div class="relative">
+                            <img src="/static/logo.PNG" alt="OpenGrammar" 
+                                class="h-10 w-auto transition-transform duration-300 group-hover:scale-110 relative z-10">
+                            <div class="absolute inset-0 bg-blue-400 rounded-full blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-violet-500 bg-clip-text text-transparent">
+                                OpenGrammar
+                            </span>
+                            <span class="text-xs text-gray-500">Open Source Grammar Checker</span>
+                        </div>
+                    </a>
+                    
+                    <!-- Modern navigation -->
+                    <nav class="flex items-center space-x-1 sm:space-x-2">
+                        <button id="aboutBtn" class="btn btn-outline text-sm px-3 sm:px-4 py-2">
+                            <span class="hidden sm:inline">About</span>
+                            <i class="fas fa-info-circle sm:ml-1"></i>
+                        </button>
+                        <button id="contactBtn" class="btn btn-outline text-sm px-3 sm:px-4 py-2">
+                            <span class="hidden sm:inline">Contact</span>
+                            <i class="fas fa-envelope sm:ml-1"></i>
+                        </button>
+                        <button id="shareBtn" class="btn btn-primary text-sm px-3 sm:px-4 py-2">
+                            <span class="hidden sm:inline">Share</span>
+                            <i class="fas fa-share-alt sm:ml-1"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+<div class="main-container">
+    <!-- Left Pane - Input -->
+    <div class="editor-pane">
+        <div class="editor-header">
+            <span class="editor-title">
+                <i class="fas fa-edit"></i>
+                Text Editor
+            </span>
+            <div class="score-display">
+                <span>Score:</span>
+                <span class="score-value" id="grammarScore">-</span>
+            </div>
+        </div>
+        <div class="stats-bar">
+            <div class="stat-item">
+                <i class="fas fa-font text-blue-500"></i>
+                <span>Words:</span>
+                <span class="stat-value" id="wordCount">0</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-keyboard text-purple-500"></i>
+                <span>Characters:</span>
+                <span class="stat-value" id="charCount">0</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-chart-line text-indigo-500"></i>
+                <span>Complexity:</span>
+                <span class="stat-value" id="complexity">Basic</span>
+            </div>
+            <button class="copy-button" id="copyText">
+                <i class="fas fa-copy"></i>
+                <span>Copy Text</span>
+            </button>
+        </div>
+        <div class="writing-controls">
+            <div class="control-group">
+                <label for="writingGoal">Goal:</label>
+                <select id="writingGoal" class="control-select">
+                    <option value="none">None</option>
+                    <option value="academic">Academic Writing</option>
+                    <option value="business">Business</option>
+                    <option value="email">Email</option>
+                    <option value="creative">Creative Writing</option>
+                    <option value="technical">Technical Document</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="writingTone">Tone:</label>
+                <select id="writingTone" class="control-select">
+                    <option value="none">None</option>
+                    <option value="formal">Formal</option>
+                    <option value="informal">Informal</option>
+                    <option value="professional">Professional</option>
+                    <option value="friendly">Friendly</option>
+                    <option value="technical">Technical</option>
+                </select>
+            </div>
+        </div>
+        <div class="editor-content">
+            <textarea id="inputText" 
+                placeholder="Enter your text here to check grammar..."></textarea>
+            <!-- Hidden file input for uploads -->
+            <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" style="display:none;">
+        </div>
+        <div class="button-container">
+            <button id="checkGrammar" class="btn btn-primary py-2">
+                <span id="buttonText">Check Grammar</span>
+                <svg id="loadingIcon" class="hidden" style="width: 20px; height: 20px; animation: spin 1s linear infinite;" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </button>
+            <button id="acceptAll" class="btn btn-outline px-3 py-2" disabled>
+                <i class="fas fa-check-double mr-1"></i>
+                Accept All
+            </button>
+            <button id="uploadFileBtn" class="btn btn-outline px-3 py-2">
+                <i class="fas fa-cloud-upload-alt mr-1"></i>
+                Upload
+            </button>
+        </div>
+    </div>
+
+    <!-- Right Pane - Results -->
+    <div class="results-pane">
+        <div class="editor-header">
+            <span class="editor-title">
+                <i class="fas fa-chart-bar"></i>
+                Analysis Results
+            </span>
+            <div class="score-display">
+                <span>Overall Score:</span>
+                <span class="score-value" id="overallScore">-</span>
+            </div>
+        </div>
+        
+        <!-- Metrics Panel -->
+        <div class="metrics-panel">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Document Quality</div>
+                    <div class="metric-value">
+                        <i class="fas fa-star"></i>
+                        <span id="qualityScore">-</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Reading Level</div>
+                    <div class="metric-value">
+                        <i class="fas fa-book-reader"></i>
+                        <span id="readingLevel">-</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Coherence</div>
+                    <div class="metric-value">
+                        <i class="fas fa-link"></i>
+                        <span id="coherenceScore">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analysis Tabs -->
+        <div class="analysis-tabs">
+            <div class="analysis-tab active" data-tab="corrections">Corrections</div>
+            <div class="analysis-tab" data-tab="document">Document Analysis</div>
+            <div class="analysis-tab" data-tab="paragraphs">Paragraph Analysis</div>
+        </div>
+        <!-- New Download Analysis PDF Button -->
+        <div class="analysis-download" style="padding: 1rem 1.5rem;">
+            <button id="downloadPDF" class="btn btn-outline px-3 py-2">
+                <i class="fas fa-download mr-1"></i>
+                Download Analysis PDF
+            </button>
+        </div>
+        
+        <!-- Corrections Tab -->
+        <div id="corrections" class="analysis-content active">
+            <!-- Initial empty state -->
+            <div class="empty-state" id="emptyState">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 class="text-lg font-medium text-slate-700">No Analysis Yet</h3>
+                <p class="mt-1">Enter text and click "Check Grammar" to get started</p>
+            </div>
+        </div>
+        
+        <!-- Document Analysis Tab -->
+        <div id="documentAnalysis" class="analysis-content">
+            <div class="analysis-section">
+                <div class="analysis-section-title">
+                    <i class="fas fa-file-alt"></i>
+                    Document Metrics
+                </div>
+                <div class="analysis-data" id="documentMetrics">
+                    <!-- Will be populated with document metrics -->
+                </div>
+            </div>
+            
+            <div class="analysis-section">
+                <div class="analysis-section-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Readability Scores
+                </div>
+                <div class="analysis-data" id="readabilityScores">
+                    <!-- Will be populated with readability scores -->
+                </div>
+            </div>
+            
+            <div class="analysis-section">
+                <div class="analysis-section-title">
+                    <i class="fas fa-award"></i>
+                    Major Strengths
+                </div>
+                <div class="analysis-data" id="majorStrengths">
+                    <!-- Will be populated with major strengths -->
+                </div>
+            </div>
+            
+            <div class="analysis-section">
+                <div class="analysis-section-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Critical Issues
+                </div>
+                <div class="analysis-data" id="criticalIssues">
+                    <!-- Will be populated with critical issues -->
+                </div>
+            </div>
+            
+            <div class="analysis-section">
+                <div class="analysis-section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    Document Coherence
+                </div>
+                <div class="analysis-data" id="documentCoherence">
+                    <!-- Will be populated with document coherence data -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Paragraph Analysis Tab -->
+        <div id="paragraphAnalysis" class="analysis-content">
+            <!-- Will be populated with paragraph analysis data -->
+        </div>
+    </div>
+</div>
+
+<!-- Fixed: Synonym tooltip -->
+<div id="synonymTooltip" class="synonym-tooltip">
+    <div class="tooltip-header">
+        <span class="tooltip-title">Synonyms</span>
+        <button class="close-tooltip" id="closeTooltip">×</button>
+    </div>
+    <div id="synonymContent" class="synonym-list">
+        <!-- Will be populated with synonyms -->
+    </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('checkGrammar');
+    const buttonText = document.getElementById('buttonText');
+    const loadingIcon = document.getElementById('loadingIcon');
+    const inputText = document.getElementById('inputText');
+    const acceptAllButton = document.getElementById('acceptAll');
+    const fileInput = document.getElementById('fileInput');
+    const uploadFileBtn = document.getElementById('uploadFileBtn');
+    const copyButton = document.getElementById('copyText');
+    const emptyState = document.getElementById('emptyState');
+    const synonymTooltip = document.getElementById('synonymTooltip');
+    const synonymContent = document.getElementById('synonymContent');
+    const closeTooltip = document.getElementById('closeTooltip');
+    
+    // Initialize window.correctionData
+    window.correctionData = {};
+
+    // Fix: Close tooltip button event listener
+    closeTooltip.addEventListener('click', hideTooltip);
+    
+    // Tab functionality
+    const tabs = document.querySelectorAll('.analysis-tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Deactivate all tabs and content
+            document.querySelectorAll('.analysis-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.analysis-content').forEach(c => c.classList.remove('active'));
+            
+            // Activate clicked tab
+            tab.classList.add('active');
+            
+            // Activate corresponding content
+            const tabName = tab.getAttribute('data-tab');
+            if (tabName === 'corrections') {
+                document.getElementById('corrections').classList.add('active');
+            } else if (tabName === 'document') {
+                document.getElementById('documentAnalysis').classList.add('active');
+            } else if (tabName === 'paragraphs') {
+                document.getElementById('paragraphAnalysis').classList.add('active');
+            }
+        });
+    });
+
+    // Update text statistics on input
+    inputText.addEventListener('input', updateStats);
+    
+    // Initialize stats on page load
+    updateStats();
+
+    const setLoading = (isLoading) => {
+        button.disabled = isLoading;
+        buttonText.textContent = isLoading ? 'Checking...' : 'Check Grammar';
+        loadingIcon.classList.toggle('hidden', !isLoading);
+        button.classList.toggle('loading', isLoading);
+    };
+
+    button.addEventListener('click', async () => {
+        const text = inputText.value;
+        const writingGoal = document.getElementById('writingGoal').value;
+        const writingTone = document.getElementById('writingTone').value;
+        
+        if (!text.trim()) {
+            showToast('error', 'Missing Text', 'Please enter text to analyze');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await fetch('https://24d8-130-102-10-78.ngrok-free.app/check_grammar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    text,
+                    goal: writingGoal,
+                    tone: writingTone
+                })
+            });
+
+            const data = await response.json();
+            
+            // Hide empty state once we have results
+            if (emptyState) {
+                emptyState.style.display = 'none';
+            }
+            
+            updateResults(data);
+            updateDetailedAnalysis(data);
+            
+            // Enable/disable Accept All button based on corrections
+            acceptAllButton.disabled = !document.querySelectorAll('[data-sentence-id]').length;
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('error', 'Error', 'Failed to check grammar. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    });
+
+    acceptAllButton.addEventListener('click', () => {
+        const corrections = document.querySelectorAll('[data-sentence-id]');
+        
+        if (corrections.length === 0) return;
+        
+        // Process corrections from last to first to avoid text position issues
+        Array.from(corrections)
+            .sort((a, b) => {
+                const sentenceA = window.correctionData[a.dataset.sentenceId];
+                const sentenceB = window.correctionData[b.dataset.sentenceId];
+                return sentenceB.position?.start_char - sentenceA.position?.start_char;
+            })
+            .forEach(correction => {
+                const sentenceId = correction.dataset.sentenceId;
+                const sentence = window.correctionData?.[sentenceId];
+                if (sentence) {
+                    applyCorrection(sentence, correction);
+                }
+            });
+            
+        // Update stats after applying all corrections
+        updateStats();
+        
+        showToast('success', 'All Applied', 'All corrections have been applied');
+    });
+
+    // File upload handling
+    uploadFileBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', async () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        buttonText.textContent = 'Processing...';
+        button.disabled = true;
+        loadingIcon.classList.remove('hidden');
+        
+        try {
+            const response = await fetch('/upload_file', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.error) {
+                showToast('error', 'Upload Error', data.error);
+                return;
+            }
+            
+            inputText.value = data.text;
+            updateStats();
+            
+            showToast('success', 'File Uploaded', `Successfully extracted text from ${file.name}`);
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('error', 'Upload Failed', 'Could not process the file');
+        } finally {
+            buttonText.textContent = 'Check Grammar';
+            button.disabled = false;
+            loadingIcon.classList.add('hidden');
+        }
+    });
+
+    // Copy text functionality
+    copyButton.addEventListener('click', copyText);
+
+    // PDF download functionality
+    const downloadPDF = document.getElementById('downloadPDF');
+    downloadPDF.addEventListener('click', () => {
+        generatePDFReport();
+    });
+
+    // *** FIX: Improved synonym tooltip functionality ***
+    // Double-click on word to show synonyms
+    inputText.addEventListener('dblclick', async (e) => {
+        const selection = window.getSelection();
+        const selectedText = selection.toString().trim();
+        
+        if (!selectedText) {
+            hideTooltip();
+            return;
+        }
+        
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        
+        // Set tooltip position
+        synonymTooltip.style.left = `${rect.left + window.scrollX}px`;
+        synonymTooltip.style.top = `${rect.bottom + window.scrollY + 10}px`;
+        
+        // Show loading state
+        synonymContent.innerHTML = '<div class="loading-text">Loading synonyms...</div>';
+        synonymTooltip.classList.add('active');
+        
+        try {
+            const response = await fetch(`/get_synonyms/${encodeURIComponent(selectedText)}`);
+            if (!response.ok) throw new Error('Failed to fetch synonyms');
+            
+            const data = await response.json();
+            const synonyms = data.synonyms || [];
+            
+            if (synonyms.length > 0) {
+                // Update tooltip with synonyms
+                synonymContent.innerHTML = synonyms.map(syn => 
+                    `<li data-synonym="${syn}">${syn}</li>`
+                ).join('');
+                
+                // Add click event to each synonym
+                synonymContent.querySelectorAll('li').forEach(item => {
+                    item.addEventListener('click', () => {
+                        replaceSynonym(selectedText, item.getAttribute('data-synonym'));
+                        hideTooltip();
+                    });
+                });
+            } else {
+                synonymContent.innerHTML = '<div class="no-synonyms-text">No synonyms found</div>';
+            }
+        } catch (error) {
+            console.error('Error fetching synonyms:', error);
+            synonymContent.innerHTML = '<div class="error-text">Failed to load synonyms</div>';
+        }
+    });
+
+    // Function to replace the selected text with a synonym
+    function replaceSynonym(original, synonym) {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(synonym));
+            selection.removeAllRanges();
+            
+            // Update textarea content to reflect the change
+            if (document.activeElement === inputText) {
+                const selStart = inputText.selectionStart;
+                const selEnd = inputText.selectionEnd;
+                const text = inputText.value;
+                
+                const beforeText = text.substring(0, selStart - original.length);
+                const afterText = text.substring(selEnd);
+                
+                inputText.value = beforeText + synonym + afterText;
+                inputText.selectionStart = selStart - original.length + synonym.length;
+                inputText.selectionEnd = selStart - original.length + synonym.length;
+                
+                // Update stats
+                updateStats();
+            }
+        }
+    }
+
+    // Hide tooltip function
+    function hideTooltip() {
+        synonymTooltip.classList.remove('active');
+    }
+    
+    // Close tooltip when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!synonymTooltip.contains(e.target) && e.target !== inputText) {
+            hideTooltip();
+        }
+    });
+
+    // Toast notification function
+    window.showToast = function(type, title, message) {
+        const toastContainer = document.getElementById('toastContainer');
+        
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        let icon = '';
+        switch(type) {
+            case 'success':
+                icon = '<i class="fas fa-check-circle toast-icon"></i>';
+                break;
+            case 'error':
+                icon = '<i class="fas fa-exclamation-circle toast-icon"></i>';
+                break;
+            case 'info':
+                icon = '<i class="fas fa-info-circle toast-icon"></i>';
+                break;
+        }
+        
+        toast.innerHTML = `
+            ${icon}
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Trigger animation
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        
+        // Auto remove after delay
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 5000);
+    };
+});
+
+function updateResults(data) {
+    // Reset corrections container and data
+    window.correctionData = {};
+    const correctionsContainer = document.getElementById('corrections');
+    correctionsContainer.innerHTML = '';
+    
+    if (data.error) {
+        correctionsContainer.innerHTML = `
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h3 class="text-lg font-medium text-red-600">Error</h3>
+                <p class="mt-1">${data.error}</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Update grammar score and set appropriate class
+    const grammarScoreEl = document.getElementById('grammarScore');
+    const overallScoreEl = document.getElementById('overallScore');
+    const score = data.meta_analysis?.overall_quality_score || '-';
+    
+    grammarScoreEl.textContent = score;
+    overallScoreEl.textContent = score;
+    
+    // Add score color classes
+    grammarScoreEl.className = 'score-value';
+    overallScoreEl.className = 'score-value';
+    
+    if (score !== '-') {
+        if (score < 60) {
+            grammarScoreEl.classList.add('low-score');
+            overallScoreEl.classList.add('low-score');
+        } else if (score < 80) {
+            grammarScoreEl.classList.add('medium-score');
+            overallScoreEl.classList.add('medium-score');
+        }
+    }
+    
+    // Update document metrics
+    const metrics = data.meta_analysis?.document_metrics || {};
+    document.getElementById('qualityScore').textContent = 
+        `${metrics.readability_scores?.flesch_reading_ease?.toFixed(1) || '-'}/100`;
+    document.getElementById('readingLevel').textContent = 
+        `Grade ${metrics.readability_scores?.flesch_kincaid_grade?.toFixed(1) || '-'}`;
+    document.getElementById('coherenceScore').textContent = 
+        `${(data.document_coherence?.logical_flow_rating * 100)?.toFixed(1) || '-'}%`;
+
+    // Update corrections
+    let hasCorrections = false;
+    if (data.sentence_analysis && data.sentence_analysis.length > 0) {
+        data.sentence_analysis.forEach((sentence, index) => {
+            // Skip sentences that don't need improvements
+            if (sentence.improvement_status === 'perfect' || 
+                sentence.improved_text === 'NO_REVISION_NEEDED') {
+                return;
+            }
+            
+            hasCorrections = true;
+            const correctionElement = createCorrectionElement(sentence, index);
+            correctionsContainer.appendChild(correctionElement);
+            
+            // Store sentence data for future use
+            window.correctionData[index] = sentence;
+        });
+    }
+    
+    // If no corrections needed, show a message
+    if (!hasCorrections) {
+        correctionsContainer.innerHTML = `
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <h3 class="text-lg font-medium text-green-600">No Issues Found</h3>
+                <p class="mt-1">Your text looks good! No grammatical issues detected.</p>
+            </div>
+        `;
+    }
+    
+    // Enable/disable the Accept All button
+    document.getElementById('acceptAll').disabled = !hasCorrections;
+}
+
+function updateDetailedAnalysis(data) {
+    // Update Document Analysis tab
+    if (data.meta_analysis) {
+        // Document Metrics
+        const metrics = data.meta_analysis.document_metrics || {};
+        const metricsHtml = `
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Character Count:</span>
+                <span class="analysis-data-value">${metrics.character_count || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Word Count:</span>
+                <span class="analysis-data-value">${metrics.word_count || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Sentence Count:</span>
+                <span class="analysis-data-value">${metrics.sentence_count || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Paragraph Count:</span>
+                <span class="analysis-data-value">${metrics.paragraph_count || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Average Words per Sentence:</span>
+                <span class="analysis-data-value">${metrics.average_words_per_sentence?.toFixed(1) || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Average Sentences per Paragraph:</span>
+                <span class="analysis-data-value">${metrics.average_sentences_per_paragraph?.toFixed(1) || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Lexical Diversity:</span>
+                <span class="analysis-data-value">${metrics.lexical_diversity?.toFixed(2) || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Passive Voice Percentage:</span>
+                <span class="analysis-data-value">${metrics.passive_voice_percentage?.toFixed(1) || '-'}%</span>
+            </div>
+        `;
+        document.getElementById('documentMetrics').innerHTML = metricsHtml;
+        
+        // Readability Scores
+        const readability = metrics.readability_scores || {};
+        const readabilityHtml = `
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Flesch Reading Ease:</span>
+                <span class="analysis-data-value">${readability.flesch_reading_ease?.toFixed(1) || '-'}/100</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Flesch-Kincaid Grade Level:</span>
+                <span class="analysis-data-value">Grade ${readability.flesch_kincaid_grade?.toFixed(1) || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Gunning Fog Index:</span>
+                <span class="analysis-data-value">${readability.gunning_fog?.toFixed(1) || '-'}</span>
+            </div>
+        `;
+        document.getElementById('readabilityScores').innerHTML = readabilityHtml;
+        
+        // Major Strengths
+        const strengths = data.meta_analysis.summary_assessment?.major_strengths || [];
+        const strengthsHtml = strengths.length > 0 
+            ? strengths.map(s => `
+                <div class="analysis-data-item">
+                    <span class="analysis-data-label">${s.area}:</span>
+                    <span class="analysis-data-value">${s.description}</span>
+                </div>
+            `).join('')
+            : '<div class="analysis-data-item"><span class="analysis-data-label">No major strengths identified</span></div>';
+        document.getElementById('majorStrengths').innerHTML = strengthsHtml;
+        
+        // Critical Issues
+        const issues = data.meta_analysis.summary_assessment?.critical_issues || [];
+        const issuesHtml = issues.length > 0 
+            ? issues.map(i => `
+                <div class="analysis-data-item">
+                    <span class="analysis-data-label">${i.area}:</span>
+                    <span class="analysis-data-value">${i.description} (${i.frequency || 'n/a'} instances)</span>
+                </div>
+            `).join('')
+            : '<div class="analysis-data-item"><span class="analysis-data-label">No critical issues identified</span></div>';
+        document.getElementById('criticalIssues').innerHTML = issuesHtml;
+    }
+    
+    // Document Coherence
+    if (data.document_coherence) {
+        const coherence = data.document_coherence;
+        const coherenceHtml = `
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Global Structure:</span>
+                <span class="analysis-data-value">${coherence.global_structure || '-'}</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Thematic Consistency:</span>
+                <span class="analysis-data-value">${(coherence.thematic_consistency * 100)?.toFixed(1) || '-'}%</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Logical Flow Rating:</span>
+                <span class="analysis-data-value">${(coherence.logical_flow_rating * 100)?.toFixed(1) || '-'}%</span>
+            </div>
+            <div class="analysis-data-item">
+                <span class="analysis-data-label">Recommendations:</span>
+                <span class="analysis-data-value">${coherence.structural_recommendations || 'None'}</span>
+            </div>
+        `;
+        document.getElementById('documentCoherence').innerHTML = coherenceHtml;
+    }
+    
+    // Paragraph Analysis
+    if (data.paragraph_analysis && data.paragraph_analysis.length > 0) {
+        const paragraphAnalysisContainer = document.getElementById('paragraphAnalysis');
+        paragraphAnalysisContainer.innerHTML = '';
+        
+        data.paragraph_analysis.forEach(para => {
+            const paraHtml = `
+                <div class="paragraph-analysis">
+                    <div class="paragraph-analysis-header">
+                        <span>Paragraph ${para.id}</span>
+                        <span>Position: ${para.position?.start_char || 0}-${para.position?.end_char || 0}</span>
+                    </div>
+                    <div class="paragraph-analysis-metrics">
+                        <div class="paragraph-metric">
+                            <span class="paragraph-metric-label">Topic Sentence Strength:</span>
+                            <span class="paragraph-metric-value">${(para.structure_assessment?.topic_sentence_strength * 100)?.toFixed(1) || '-'}%</span>
+                        </div>
+                        <div class="paragraph-metric">
+                            <span class="paragraph-metric-label">Development Quality:</span>
+                            <span class="paragraph-metric-value">${(para.structure_assessment?.development_quality * 100)?.toFixed(1) || '-'}%</span>
+                        </div>
+                        <div class="paragraph-metric">
+                            <span class="paragraph-metric-label">Unity Score:</span>
+                            <span class="paragraph-metric-value">${(para.structure_assessment?.unity_score * 100)?.toFixed(1) || '-'}%</span>
+                        </div>
+                        <div class="paragraph-metric">
+                            <span class="paragraph-metric-label">Transition Effectiveness:</span>
+                            <span class="paragraph-metric-value">${(para.structure_assessment?.transition_effectiveness * 100)?.toFixed(1) || '-'}%</span>
+                        </div>
+                    </div>
+                    <div class="paragraph-suggestions">
+                        ${para.improvement_suggestions || 'No specific improvement suggestions.'}
+                    </div>
+                </div>
+            `;
+            paragraphAnalysisContainer.innerHTML += paraHtml;
+        });
+    } else {
+        document.getElementById('paragraphAnalysis').innerHTML = `
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 class="text-lg font-medium text-slate-700">No Paragraph Analysis</h3>
+                <p class="mt-1">Paragraph analysis data is not available.</p>
+            </div>
+        `;
+    }
+}
+
+function createCorrectionElement(sentence, index) {
+    const div = document.createElement('div');
+    div.className = 'correction-item';
+    div.setAttribute('data-sentence-id', index);
+
+    const content = `
+        <div class="correction-section">
+            <div class="correction-label">
+                <i class="fas fa-pen"></i>
+                Original:
+            </div>
+            <div class="original-text">${sentence.original_text}</div>
+        </div>
+        <div class="correction-section">
+            <div class="correction-label">
+                <i class="fas fa-check-circle"></i>
+                Improved:
+            </div>
+            <div class="corrected-text">${sentence.improved_text}</div>
+        </div>
+        <div class="correction-section">
+            <div class="correction-label">
+                <i class="fas fa-exclamation-circle"></i>
+                Issues:
+            </div>
+            <ul class="mistakes-list">
+                ${(sentence.identified_issues || []).map(issue => `
+                    <li>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>${issue.category}:</strong> 
+                            ${issue.explanation}
+                        </div>
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
+        <div class="correction-buttons">
+            <button class="btn btn-primary accept-correction">
+                <i class="fas fa-check mr-1"></i> Accept
+            </button>
+            <button class="btn btn-outline dismiss-correction">
+                <i class="fas fa-times mr-1"></i> Dismiss
+            </button>
+        </div>
+    `;
+
+    div.innerHTML = content;
+
+    // Add event listeners to the buttons
+    div.querySelector('.accept-correction').addEventListener('click', () => {
+        applyCorrection(sentence, div);
+        showToast('success', 'Correction Applied', 'The suggestion has been applied');
+    });
+
+    div.querySelector('.dismiss-correction').addEventListener('click', () => {
+        div.remove();
+        
+        // If no corrections left, show empty state and disable Accept All button
+        const remainingCorrections = document.querySelectorAll('[data-sentence-id]').length;
+        if (remainingCorrections === 0) {
+            document.getElementById('corrections').innerHTML = `
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <h3 class="text-lg font-medium text-green-600">All Issues Addressed</h3>
+                    <p class="mt-1">You've reviewed all suggested improvements.</p>
+                </div>
+            `;
+            document.getElementById('acceptAll').disabled = true;
+        }
+    });
+
+    return div;
+}
+
+
+function updateAllPositions(changeIndex, originalLength, lengthDifference) {
+    Object.keys(window.correctionData).forEach(id => {
+        const sentence = window.correctionData[id];
+        if (sentence.position) {
+            // If sentence starts after the change, adjust both start and end
+            if (sentence.position.start_char > changeIndex + originalLength) {
+                sentence.position.start_char += lengthDifference;
+                sentence.position.end_char += lengthDifference;
+            } 
+            // If the sentence contains or overlaps the change, adjust only the end position
+            else if (sentence.position.end_char > changeIndex) {
+                sentence.position.end_char += lengthDifference;
+            }
+        }
+    });
+}
+
+
+// FIX: Improved apply correction function that correctly handles positions
+
+function applyCorrection(sentence, correctionDiv) {
+    const textArea = document.getElementById('inputText');
+    const fullText = textArea.value;
+    const originalText = sentence.original_text;
+    const correctedText = sentence.improved_text;
+    
+    if (sentence.position && 
+        typeof sentence.position.start_char === 'number' && 
+        typeof sentence.position.end_char === 'number') {
+        
+        const start = sentence.position.start_char;
+        const end = sentence.position.end_char;
+        
+        // Verify the position is valid
+        if (start >= 0 && end <= fullText.length && start <= end) {
+            // Store the length difference for position adjustments
+            const lengthDifference = correctedText.length - originalText.length;
+            
+            // Replace text in the textarea
+            const newText = fullText.substring(0, start) + correctedText + fullText.substring(end);
+            textArea.value = newText;
+            
+            // Update all correction positions that come after this one
+            const otherCorrections = document.querySelectorAll('[data-sentence-id]');
+            otherCorrections.forEach(item => {
+                const id = item.dataset.sentenceId;
+                if (id !== correctionDiv.dataset.sentenceId && window.correctionData[id]) {
+                    const otherSentence = window.correctionData[id];
+                    
+                    // Only adjust positions for sentences that come after the current one
+                    if (otherSentence.position && otherSentence.position.start_char > end) {
+                        otherSentence.position.start_char += lengthDifference;
+                        otherSentence.position.end_char += lengthDifference;
+                    }
+                }
+            });
+        } else {
+            // Fallback: find and replace the first occurrence
+            const index = fullText.indexOf(originalText);
+            
+            if (index !== -1) {
+                const lengthDifference = correctedText.length - originalText.length;
+                const newText = fullText.substring(0, index) + correctedText + fullText.substring(index + originalText.length);
+                textArea.value = newText;
+                
+                // Update all correction positions
+                updateAllPositions(index, originalText.length, lengthDifference);
+            }
+        }
+    } else {
+        // Fallback: find and replace the first occurrence
+        const index = fullText.indexOf(originalText);
+        
+        if (index !== -1) {
+            const lengthDifference = correctedText.length - originalText.length;
+            const newText = fullText.substring(0, index) + correctedText + fullText.substring(index + originalText.length);
+            textArea.value = newText;
+            
+            // Update all correction positions
+            updateAllPositions(index, originalText.length, lengthDifference);
+        }
+    }
+    
+    // Remove the correction element
+    correctionDiv.remove();
+    
+    // Update stats and check remaining corrections
+    updateStats();
+    checkRemainingCorrections();
+}
+
+function checkRemainingCorrections() {
+    const remainingCorrections = document.querySelectorAll('[data-sentence-id]').length;
+    document.getElementById('acceptAll').disabled = remainingCorrections === 0;
+    
+    if (remainingCorrections === 0) {
+        document.getElementById('corrections').innerHTML = `
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <h3 class="text-lg font-medium text-green-600">All Issues Addressed</h3>
+                <p class="mt-1">You've reviewed all suggested improvements.</p>
+            </div>
+        `;
+    }
+}
+
+function updateStats() {
+    const text = document.getElementById('inputText').value;
+    const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+    
+    document.getElementById('wordCount').textContent = words.length;
+    document.getElementById('charCount').textContent = text.length;
+    
+    // Calculate complexity based on average word length and sentence length
+    const sentences = text.split(/[.!?]+/).filter(sent => sent.trim().length > 0);
+    const avgWordLength = words.length > 0 
+        ? words.reduce((sum, word) => sum + word.length, 0) / words.length 
+        : 0;
+    const avgSentenceLength = sentences.length > 0 
+        ? words.length / sentences.length 
+        : 0;
+    
+    let complexity = 'Basic';
+    if (avgWordLength > 6 && avgSentenceLength > 15) {
+        complexity = 'Advanced';} else if (avgWordLength > 5 || avgSentenceLength > 12) {
+        complexity = 'Intermediate';
+    }
+    
+    document.getElementById('complexity').textContent = complexity;
+}
+
+function copyText() {
+    const textArea = document.getElementById('inputText');
+    const text = textArea.value;
+    
+    if (!text) {
+        showToast('error', 'Copy Failed', 'No text to copy');
+        return;
+    }
+
+    const copyBtn = document.getElementById('copyText');
+    const originalText = copyBtn.innerHTML;
+
+    // Try the modern clipboard API first
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                showToast('success', 'Text Copied', 'Text has been copied to clipboard');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            })
+            .catch(fallbackCopy);
+    } else {
+        fallbackCopy();
+    }
+
+    function fallbackCopy() {
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            showToast('success', 'Text Copied', 'Text has been copied to clipboard');
+            
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+            showToast('error', 'Copy Failed', 'Could not copy text to clipboard');
+        }
+        // Deselect to improve user experience
+        window.getSelection().removeAllRanges();
+    }
+}
+
+function generatePDFReport() {
+    const downloadBtn = document.getElementById('downloadPDF');
+    const originalText = downloadBtn.innerHTML;
+    
+    // Get all the analysis data
+    const analysisData = {
+        meta_analysis: {
+            overall_quality_score: document.getElementById('grammarScore').textContent,
+            confidence_level: 0.95,
+            document_metrics: {
+                word_count: parseInt(document.getElementById('wordCount').textContent) || 0,
+                character_count: parseInt(document.getElementById('charCount').textContent) || 0,
+                sentence_count: document.querySelectorAll('.correction-item').length,
+                paragraph_count: document.getElementById('inputText').value.split('\n\n').filter(p => p.trim()).length,
+                average_words_per_sentence: calculateAvgWordsPerSentence(),
+                readability_scores: {
+                    flesch_kincaid_grade: parseFloat(document.getElementById('readingLevel').textContent.replace('Grade ', '')) || 0,
+                    flesch_reading_ease: parseFloat(document.getElementById('qualityScore').textContent.split('/')[0]) || 0
+                },
+                passive_voice_percentage: 0,
+                lexical_diversity: calculateLexicalDiversity()
+            },
+            summary_assessment: {
+                major_strengths: collectStrengths(),
+                critical_issues: collectIssues()
+            }
+        }
+    };
+
+    // Show loading state
+    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+    downloadBtn.disabled = true;
+
+    fetch('/generate_pdf', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(analysisData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.error || 'Failed to generate PDF');
+            });
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'grammar_analysis_report.pdf';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        // Show success message
+        showToast('success', 'Success', 'PDF report has been generated and downloaded');
+        
+        // Reset button state
+        downloadBtn.innerHTML = originalText;
+        downloadBtn.disabled = false;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('error', 'Error', error.message || 'Failed to generate PDF report');
+        
+        // Reset button state
+        downloadBtn.innerHTML = originalText;
+        downloadBtn.disabled = false;
+    });
+}
+
+// Helper functions for PDF generation
+function calculateAvgWordsPerSentence() {
+    const text = document.getElementById('inputText').value;
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim());
+    const words = text.split(/\s+/).filter(w => w.trim());
+    return sentences.length ? (words.length / sentences.length).toFixed(1) : 0;
+}
+
+function calculateLexicalDiversity() {
+    const text = document.getElementById('inputText').value;
+    const words = text.toLowerCase().split(/\s+/).filter(w => w.trim());
+    const uniqueWords = new Set(words);
+    return words.length ? (uniqueWords.size / words.length).toFixed(2) : 0;
+}
+
+function collectStrengths() {
+    const strengths = [];
+    const strengthsContainer = document.getElementById('majorStrengths');
+    if (strengthsContainer) {
+        strengthsContainer.querySelectorAll('.analysis-data-item').forEach(item => {
+            const label = item.querySelector('.analysis-data-label')?.textContent.replace(':', '') || '';
+            const value = item.querySelector('.analysis-data-value')?.textContent || '';
+            if (label && value) {
+                strengths.push({ area: label, description: value });
+            }
+        });
+    }
+    return strengths;
+}
+
+function collectIssues() {
+    const issues = [];
+    const issuesContainer = document.getElementById('criticalIssues');
+    if (issuesContainer) {
+        issuesContainer.querySelectorAll('.analysis-data-item').forEach(item => {
+            const label = item.querySelector('.analysis-data-label')?.textContent.replace(':', '') || '';
+            const value = item.querySelector('.analysis-data-value')?.textContent || '';
+            if (label && value) {
+                issues.push({ area: label, description: value });
+            }
+        });
+    }
+    return issues;
+}
+
+// Initialize application
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize with sample text
+    const sampleText = "Thier was a big party at the park yesterday, every one was so excited to be there. I was talking to my freinds when we heared loud music. The foods was really delicious and the weather was fine, though it started rainning later. We didnt let the rain stop us though. We were still laughing and dancing until late.";
+    
+    const inputText = document.getElementById('inputText');
+    if (inputText && !inputText.value) {
+        inputText.value = sampleText;
+        updateStats();
+    }
+    
+    // Create toast container if it doesn't exist
+    if (!document.getElementById('toastContainer')) {
+        const toastContainer = document.createElement('div');
+        toastContainer.id = 'toastContainer';
+        toastContainer.className = 'toast-container';
+        document.body.appendChild(toastContainer);
+    }
+});
+
+// Remove or comment out the existing dblclick synonym listener
+// inputText.addEventListener('dblclick', async (e) => { ... });
+
+// NEW: Add click event listener for synonyms
+inputText.addEventListener('click', async (e) => {
+    // Use the caret position to get the clicked word
+    const caretPos = inputText.selectionStart;
+    const text = inputText.value;
+    const wordInfo = getWordAtPosition(text, caretPos);
+    if (!wordInfo) {
+        hideTooltip();
+        return;
+    }
+    const word = wordInfo.word;
+    
+    try {
+        // Fetch synonyms from free Datamuse API
+        const response = await fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}`);
+        if (!response.ok) throw new Error('Failed to fetch synonyms');
+        const data = await response.json();
+        const synonyms = data.map(item => item.word);
+        
+        // Print synonyms to console
+        console.log(`Synonyms for "${word}":`, synonyms);
+        
+        // Show synonyms in tooltip
+        synonymContent.innerHTML = synonyms.length > 0 
+            ? '<ul>' + synonyms.map(syn => `<li>${syn}</li>`).join('') + '</ul>' 
+            : '<div class="no-synonyms-text">No synonyms found</div>';
+        
+        // Position tooltip at the click coordinates
+        synonymTooltip.style.left = `${e.pageX}px`;
+        synonymTooltip.style.top = `${e.pageY + 10}px`;
+        synonymTooltip.classList.add('active');
+    } catch (error) {
+        console.error('Error fetching synonyms:', error);
+        synonymContent.innerHTML = '<div class="error-text">Failed to load synonyms</div>';
+    }
+});
+
+</script>
+
+    </main>
+    
+    <!-- Modern Footer -->
+    <footer class="bg-white border-t border-gray-200 pt-12 pb-8 relative">
+        <!-- Curved separator for modern look -->
+        <div class="absolute top-0 left-0 w-full overflow-hidden" style="transform: translateY(-99%)">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="fill-white h-16 w-full">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C98,19.48,203.09,56.44,321.39,56.44Z"></path>
+            </svg>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- About column -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">About OpenGrammar</h3>
+                    <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                        OpenGrammar is a free, open-source grammar checking tool designed to help you improve your writing with advanced AI analysis.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="https://twitter.com/share?url=https://opengrammar.io" target="_blank" class="social-btn bg-[#1DA1F2]">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://opengrammar.io" target="_blank" class="social-btn bg-[#1877F2]">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://opengrammar.io" target="_blank" class="social-btn bg-[#0A66C2]">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/yourusername/opengrammar" target="_blank" class="social-btn bg-[#24292F]">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Contact column -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Contact</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center h-8 w-8 rounded-md bg-gradient-to-r from-blue-600 to-violet-500 text-white mr-3">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Email</p>
+                                <a href="mailto:muneebsiddique007@gmail.com" class="text-sm text-gray-700 hover:text-blue-600 transition-colors">
+                                    muneebsiddique007@gmail.com
+                                </a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center h-8 w-8 rounded-md bg-gradient-to-r from-blue-600 to-violet-500 text-white mr-3">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Developer</p>
+                                <p class="text-sm text-gray-700">Muhammad Muneeb</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center h-8 w-8 rounded-md bg-gradient-to-r from-blue-600 to-violet-500 text-white mr-3">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Location</p>
+                                <p class="text-sm text-gray-700">Queensland, Australia</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Stats column -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Statistics</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <i class="fas fa-users text-lg text-blue-500 mr-3"></i>
+                                    <span class="text-sm text-gray-700">Unique Visitors</span>
+                                </div>
+                                <span class="text-lg font-semibold text-gray-900" id="visitorCount">15,487</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-alt text-lg text-purple-500 mr-3"></i>
+                                    <span class="text-sm text-gray-700">Documents Checked</span>
+                                </div>
+                                <span class="text-lg font-semibold text-gray-900" id="documentsChecked">124,932</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-lg text-green-500 mr-3"></i>
+                                    <span class="text-sm text-gray-700">Errors Fixed</span>
+                                </div>
+                                <span class="text-lg font-semibold text-gray-900" id="errorsFixed">3,459,827</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer bottom -->
+            <div class="border-t border-gray-200 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-500 mb-4 md:mb-0">&copy; 2025 OpenGrammar - Open Source Grammar Checking Tool</p>
+                <div class="flex space-x-6">
+                    <button id="privacyBtn" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Privacy Policy</button>
+                    <button id="termsBtn" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Terms of Service</button>
+                    <button id="cookieBtn" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Cookie Policy</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Modals with modern design -->
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="aboutModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">About OpenGrammar</h2>
+                <p class="text-sm text-gray-500">Free Open Source Grammar Checking Tool</p>
+            </div>
+            <div class="space-y-4">
+                <p class="text-gray-600">OpenGrammar is a free, open-source grammar checking tool designed to help writers, students, and professionals improve their writing.</p>
+                <p class="text-gray-600">Our tool uses advanced AI to analyze text for grammatical errors, style issues, and readability problems, providing specific suggestions to enhance your writing.</p>
+                
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Key Features</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Grammar and spelling correction</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Style and tone analysis</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Readability assessment</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Document structure analysis</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">Support for multiple file formats</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 mt-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Open Source</h3>
+                    <p class="text-gray-600 mb-4">OpenGrammar is proudly open source. We believe in transparency and community collaboration. Feel free to contribute to our project on GitHub!</p>
+                    <a href="https://github.com/yourusername/opengrammar" target="_blank" class="btn btn-primary inline-flex items-center">
+                        <i class="fab fa-github mr-2"></i> View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="contactModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Contact Us</h2>
+                <p class="text-sm text-gray-500">We'd love to hear from you</p>
+            </div>
+            
+            <p class="text-gray-600 mb-6">Have questions or feedback? Send us a message and we'll get back to you as soon as possible.</p>
+            
+            <form id="contactForm" class="space-y-4">
+                <div class="form-control">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" name="name" class="form-input" required>
+                </div>
+                <div class="form-control">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-input" required>
+                </div>
+                <div class="form-control">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" id="subject" name="subject" class="form-input" required>
+                </div>
+                <div class="form-control">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea id="message" name="message" class="form-textarea" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-full py-3">
+                    <i class="fas fa-paper-plane mr-2"></i> Send Message
+                </button>
+            </form>
+            
+            <div class="mt-6 py-4 border-t border-gray-200 text-center">
+                <p class="text-sm text-gray-500 mb-1">Or email us directly at:</p>
+                <a href="mailto:muneebsiddique007@gmail.com" class="text-blue-600 font-medium hover:text-blue-700 transition-colors">
+                    muneebsiddique007@gmail.com
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="shareModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Share OpenGrammar</h2>
+                <p class="text-sm text-gray-500">Help others improve their writing</p>
+            </div>
+            
+            <p class="text-gray-600 mb-6">Share OpenGrammar with friends, colleagues, or students who might benefit from better writing:</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <a href="https://twitter.com/share?url=https://opengrammar.io&text=Check out OpenGrammar, a free open-source grammar checking tool!" target="_blank" class="flex items-center justify-center p-4 rounded-lg bg-[#1DA1F2] text-white hover:bg-opacity-90 transition-all">
+                    <i class="fab fa-twitter text-xl mr-3"></i>
+                    <span>Twitter</span>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://opengrammar.io" target="_blank" class="flex items-center justify-center p-4 rounded-lg bg-[#1877F2] text-white hover:bg-opacity-90 transition-all">
+                    <i class="fab fa-facebook-f text-xl mr-3"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://opengrammar.io&title=OpenGrammar - Free Grammar Checker" target="_blank" class="flex items-center justify-center p-4 rounded-lg bg-[#0A66C2] text-white hover:bg-opacity-90 transition-all">
+                    <i class="fab fa-linkedin-in text-xl mr-3"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://api.whatsapp.com/send?text=Check out OpenGrammar, a free open-source grammar checking tool! https://opengrammar.io" target="_blank" class="flex items-center justify-center p-4 rounded-lg bg-[#25D366] text-white hover:bg-opacity-90 transition-all">
+                    <i class="fab fa-whatsapp text-xl mr-3"></i>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <p class="text-sm font-medium text-gray-700 mb-2">Or copy this link:</p>
+                <div class="flex rounded-lg overflow-hidden border border-gray-200">
+                    <input type="text" value="https://opengrammar.io" class="w-full py-2 px-3 outline-none bg-white" readonly id="shareLink">
+                    <button onclick="copyShareLink()" id="copyLinkBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 flex items-center justify-center transition-colors">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Privacy Policy Modal (simplified) -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="privacyModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Privacy Policy</h2>
+                <p class="text-sm text-gray-500">Last updated: February 2025</p>
+            </div>
+            
+            <div class="h-[60vh] overflow-y-auto pr-2 text-gray-600 space-y-6">
+                <!-- Privacy content here -->
+                <p>At OpenGrammar, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your information when you use our service.</p>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Information We Collect</h3>
+                    <p class="mb-2">We collect minimal information necessary to provide our service:</p>
+                    <ul class="space-y-1 ml-5 list-disc">
+                        <li>Text content you submit for grammar checking</li>
+                        <li>Basic usage statistics to improve our service</li>
+                        <li>Optional contact information if you reach out to us</li>
+                    </ul>
+                </div>
+                
+                <!-- Additional sections would go here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Terms of Service Modal (simplified) -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="termsModal">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="mb-6 pb-2 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Terms of Service</h2>
+                <p class="text-sm text-gray-500">Last updated: February 2025</p>
+            </div>
+            
+            <div class="h-[60vh] overflow-y-auto pr-2 text-gray-600 space-y-6">
+                <!-- Terms content here -->
+                <p>By accessing or using OpenGrammar, you agree to be bound by these Terms of Service.</p>
+                
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">Service Description</h3>
+                  <p>OpenGrammar provides grammar checking and text analysis services. Our service is provided "as is" without warranties of any kind.</p>
+              </div>
+              
+              <div>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">User Conduct</h3>
+                  <p class="mb-2">You agree not to:</p>
+                  <ul class="space-y-1 ml-5 list-disc">
+                      <li>Use our service for any illegal purpose</li>
+                      <li>Attempt to bypass or breach our security measures</li>
+                      <li>Share harmful, offensive, or inappropriate content</li>
+                      <li>Interfere with the proper functioning of the service</li>
+                  </ul>
+              </div>
+              
+              <!-- Additional sections would go here -->
+          </div>
+      </div>
+  </div>
+  
+  <!-- Cookie Policy Modal (simplified) -->
+  <div id="cookieModal" class="modal">
+      <div class="modal-content">
+          <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl cursor-pointer close-modal" data-modal="cookieModal">
+              <i class="fas fa-times"></i>
+          </span>
+          <div class="mb-6 pb-2 border-b border-gray-200">
+              <h2 class="text-2xl font-bold text-gray-800">Cookie Policy</h2>
+              <p class="text-sm text-gray-500">Last updated: February 2025</p>
+          </div>
+          
+          <div class="h-[60vh] overflow-y-auto pr-2 text-gray-600 space-y-6">
+              <!-- Cookie content here -->
+              <p>This Cookie Policy explains how OpenGrammar uses cookies and similar technologies.</p>
+              
+              <div>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">What Are Cookies</h3>
+                  <p>Cookies are small text files stored on your device when you visit websites. They help remember your preferences and improve your browsing experience.</p>
+              </div>
+              
+              <!-- Additional sections would go here -->
+          </div>
+      </div>
+  </div>
+  
+  <!-- Modern notification toast -->
+  <div id="toast" class="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 flex items-center transform translate-y-24 opacity-0 transition-all duration-300 z-50 max-w-xs">
+      <div id="toastIcon" class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+          <i id="toastIconType" class="fas fa-check-circle text-xl"></i>
+      </div>
+      <div class="flex-1">
+          <h3 id="toastTitle" class="font-medium text-gray-900 text-sm"></h3>
+          <p id="toastMessage" class="text-gray-600 text-xs mt-1"></p>
+      </div>
+      <button onclick="hideToast()" class="ml-4 text-gray-400 hover:text-gray-600">
+          <i class="fas fa-times"></i>
+      </button>
+  </div>
+  
+  <!-- JavaScript for functionality -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Modal functionality
+      const modalButtons = {
+          'aboutBtn': 'aboutModal',
+          'contactBtn': 'contactModal',
+          'shareBtn': 'shareModal',
+          'privacyBtn': 'privacyModal',
+          'termsBtn': 'termsModal',
+          'cookieBtn': 'cookieModal'
+      };
+      
+      // Open modal when button is clicked
+      Object.keys(modalButtons).forEach(btn => {
+          const button = document.getElementById(btn);
+          const modal = document.getElementById(modalButtons[btn]);
+          
+          if (button && modal) {
+              button.addEventListener('click', () => {
+                  modal.style.display = 'block';
+                  setTimeout(() => {
+                      modal.classList.add('active');
+                  }, 10);
+              });
+          }
+      });
+      
+      // Close modal when X is clicked
+      const closeButtons = document.querySelectorAll('.close-modal');
+      closeButtons.forEach(button => {
+          button.addEventListener('click', () => {
+              const modal = document.getElementById(button.getAttribute('data-modal'));
+              modal.classList.remove('active');
+              setTimeout(() => {
+                  modal.style.display = 'none';
+              }, 300);
+          });
+      });
+      
+      // Close modal when clicking outside
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+          modal.addEventListener('click', (e) => {
+              if (e.target === modal) {
+                  modal.classList.remove('active');
+                  setTimeout(() => {
+                      modal.style.display = 'none';
+                  }, 300);
+              }
+          });
+      });
+      
+      // Contact form submission
+      const contactForm = document.getElementById('contactForm');
+      if (contactForm) {
+          contactForm.addEventListener('submit', function(e) {
+              e.preventDefault();
+              const name = document.getElementById('name').value;
+              const email = document.getElementById('email').value;
+              const subject = document.getElementById('subject').value;
+              const message = document.getElementById('message').value;
+              
+              // Create mailto link
+              const mailtoLink = `mailto:muneebsiddique007@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+              window.location.href = mailtoLink;
+              
+              // Reset form
+              contactForm.reset();
+              
+              // Show success toast
+              showToast('success', 'Message Sent', 'Thanks for contacting us. We\'ll respond soon!');
+              
+              // Close modal
+              const modal = document.getElementById('contactModal');
+              modal.classList.remove('active');
+              setTimeout(() => {
+                  modal.style.display = 'none';
+              }, 300);
+          });
+      }
+      
+      // Visitor counter animation
+      const statsElements = ['visitorCount', 'documentsChecked', 'errorsFixed'];
+      
+      statsElements.forEach(id => {
+          const element = document.getElementById(id);
+          if (element) {
+              // Parse the initial value and save it
+              const initialValue = parseInt(element.textContent.replace(/,/g, ''));
+              element.setAttribute('data-value', initialValue);
+              
+              // Animate the counter every 15 seconds
+              setInterval(() => {
+                  animateCounter(id);
+              }, 15000);
+          }
+      });
+  });
+  
+  // Counter animation function
+  function animateCounter(id) {
+      const element = document.getElementById(id);
+      const currentValue = parseInt(element.getAttribute('data-value'));
+      
+      // Generate random increment based on counter type
+      let increment;
+      switch(id) {
+          case 'visitorCount':
+              increment = Math.floor(Math.random() * 6) + 1; // 1-6
+              break;
+          case 'documentsChecked':
+              increment = Math.floor(Math.random() * 20) + 5; // 5-25
+              break;
+          case 'errorsFixed':
+              increment = Math.floor(Math.random() * 100) + 50; // 50-150
+              break;
+          default:
+              increment = 1;
+      }
+      
+      const newValue = currentValue + increment;
+      
+      // Save the new value
+      element.setAttribute('data-value', newValue);
+      
+      // Apply animation class
+      element.classList.remove('counter-animation');
+      void element.offsetWidth; // Trigger reflow
+      element.classList.add('counter-animation');
+      
+      // Update the displayed value
+      element.textContent = newValue.toLocaleString();
+  }
+  
+  // Function to copy share link
+  function copyShareLink() {
+      const shareLink = document.getElementById('shareLink');
+      shareLink.select();
+      shareLink.setSelectionRange(0, 99999); // For mobile devices
+      
+      navigator.clipboard.writeText(shareLink.value)
+          .then(() => {
+              // Show success toast
+              showToast('success', 'Link Copied', 'Link has been copied to clipboard!');
+              
+              // Visual feedback on the button
+              const copyLinkBtn = document.getElementById('copyLinkBtn');
+              const originalIcon = copyLinkBtn.innerHTML;
+              copyLinkBtn.innerHTML = '<i class="fas fa-check"></i>';
+              
+              setTimeout(() => {
+                  copyLinkBtn.innerHTML = originalIcon;
+              }, 2000);
+          })
+          .catch(err => {
+              // Fallback to old method
+              document.execCommand('copy');
+              showToast('success', 'Link Copied', 'Link has been copied to clipboard!');
+          });
+  }
+  
+  // Toast notification functions
+  function showToast(type, title, message) {
+      const toast = document.getElementById('toast');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastIconType = document.getElementById('toastIconType');
+      
+      // Set content
+      toastTitle.textContent = title;
+      toastMessage.textContent = message;
+      
+      // Set style based on type
+      if (type === 'success') {
+          toastIcon.className = 'flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-green-100';
+          toastIconType.className = 'fas fa-check-circle text-xl text-green-500';
+      } else if (type === 'error') {
+          toastIcon.className = 'flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-red-100';
+          toastIconType.className = 'fas fa-exclamation-circle text-xl text-red-500';
+      } else if (type === 'info') {
+          toastIcon.className = 'flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-blue-100';
+          toastIconType.className = 'fas fa-info-circle text-xl text-blue-500';
+      }
+      
+      // Show toast
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      
+      // Auto hide after 5 seconds
+      setTimeout(hideToast, 5000);
+  }
+  
+  function hideToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('translate-y-24', 'opacity-0');
+  }
+  </script>
+</body>
+</html>
