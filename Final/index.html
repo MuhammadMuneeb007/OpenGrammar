@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenGrammar - Time to contribute back to the global community | AI Writing Assistant</title>
+    <meta name="description" content="OpenGrammar - Open source AI-powered grammar checker hosted on edtechtools.me. Time to contribute back to the global community with free, accessible writing tools for everyone.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        'system': ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9384419506874151"
+         crossorigin="anonymous"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/modern_grammar_checker_css.css">
+    <link rel="stylesheet" href="css/synonyms.css">
+    <link rel="stylesheet" href="css/loading-screen.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/advancedAnalysis.css">
+    <link rel="stylesheet" href="css/textStatistics.css">
+    <link rel="stylesheet" href="css/mobileEnhancements.css">
+    <link rel="stylesheet" href="css/writingTools.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./static/logo.PNG">
+</head>
+<body class="font-inter bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <!-- Minimal Loading Screen -->
+     
+    <div id="loadingScreen" class="iphone-loading-screen">
+         <div class="background-elements">
+            <!-- Static positioned words for testing -->
+            <div style="position: absolute; left: 10%; top: 20%; color: rgba(255, 255, 255, 0.4); font-size: 2rem; font-family: 'Inter', sans-serif;">Grammar</div>
+            <div style="position: absolute; right: 15%; top: 30%; color: rgba(255, 255, 255, 0.3); font-size: 1.5rem; font-family: 'Inter', sans-serif;">Syntax</div>
+            <div style="position: absolute; left: 20%; bottom: 25%; color: rgba(255, 255, 255, 0.35); font-size: 1.8rem; font-family: 'Inter', sans-serif;">Language</div>
+            <div style="position: absolute; right: 20%; bottom: 35%; color: rgba(255, 255, 255, 0.3); font-size: 1.4rem; font-family: 'Inter', sans-serif;">Verb</div>
+            <div style="position: absolute; left: 50%; top: 15%; color: rgba(255, 255, 255, 0.25); font-size: 1.6rem; font-family: 'Inter', sans-serif;">Parse</div>
+            <div style="position: absolute; right: 40%; top: 70%; color: rgba(255, 255, 255, 0.3); font-size: 1.5rem; font-family: 'Inter', sans-serif;">Sentence</div>
+            
+            <!-- Floating Grammar Words -->
+            <div class="floating-word large" style="left: 10%; animation-delay: -2s;">Grammar</div>
+            <div class="floating-word medium" style="left: 80%; animation-delay: -8s;">Syntax</div>
+            <div class="floating-word small" style="left: 60%; animation-delay: -15s;">Parse</div>
+            <div class="floating-word medium" style="left: 20%; animation-delay: -5s;">Language</div>
+            <div class="floating-word large" style="left: 70%; animation-delay: -12s;">Verb</div>
+            <div class="floating-word small" style="left: 40%; animation-delay: -18s;">Noun</div>
+            <div class="floating-word medium" style="left: 90%; animation-delay: -1s;">Phrase</div>
+            <div class="floating-word small" style="left: 15%; animation-delay: -10s;">Clause</div>
+            <div class="floating-word large" style="left: 50%; animation-delay: -7s;">Sentence</div>
+            <div class="floating-word medium" style="left: 35%; animation-delay: -14s;">Adjective</div>
+            <div class="floating-word small" style="left: 75%; animation-delay: -4s;">Adverb</div>
+            <div class="floating-word medium" style="left: 5%; animation-delay: -11s;">Subject</div>
+            
+            <!-- Grammar Symbols -->
+            <div class="grammar-symbol" style="left: 25%; top: 20%; animation-delay: -3s;">"</div>
+            <div class="grammar-symbol" style="left: 75%; top: 30%; animation-delay: -9s;">;</div>
+            <div class="grammar-symbol" style="left: 15%; top: 60%; animation-delay: -6s;">?</div>
+            <div class="grammar-symbol" style="left: 85%; top: 70%; animation-delay: -13s;">!</div>
+            <div class="grammar-symbol" style="left: 45%; top: 15%; animation-delay: -16s;">:</div>
+            <div class="grammar-symbol" style="left: 65%; top: 80%; animation-delay: -2s;">—</div>
+            <div class="grammar-symbol" style="left: 35%; top: 85%; animation-delay: -19s;">'</div>
+            <div class="grammar-symbol" style="left: 55%; top: 25%; animation-delay: -8s;">,</div>
+        </div>
+       <div class="loading-content">
+                <img src="./static/logo.PNG" alt="OpenGrammar" class="loading-logo-img">
+            <button id="skipLoadingBtn" class="loading-skip-button">
+                <i class="fas fa-arrow-right"></i>
+                ENTER APP
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-content">
+                <a href="https://edtechtools.me" class="logo-container">
+                    <div class="logo-wrapper">
+                        <img src="./static/logo.PNG" alt="OpenGrammar" class="logo-img">
+                        <div class="logo-glow"></div>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-title">OpenGrammar</span>
+                        <span class="logo-subtitle">Time to contribute back to the global community</span>
+                    </div>
+                </a>
+                
+                <nav class="nav">
+                    <div class="visitor-stats">
+                        <i class="fas fa-users"></i>
+                        <span id="visitorCount">Loading...</span>
+                        <span class="stats-label">visitors</span>
+                    </div>
+                    <button id="instructionsBtn" class="nav-btn">
+                        <span class="nav-btn-text">How to Use</span>
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                    <a href="https://github.com/muhammadmuneeb007" target="_blank" class="nav-btn github-link">
+                        <span class="nav-btn-text">GitHub</span>
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <button id="aboutBtn" class="nav-btn">
+                        <span class="nav-btn-text">About</span>
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                    <button id="contactBtn" class="nav-btn">
+                        <span class="nav-btn-text">Contact</span>
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    <button id="shareBtn" class="nav-btn-primary">
+                        <span class="nav-btn-text">Share</span>
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="main-container">
+            <!-- Editor Panel -->
+            <section class="editor-panel">
+                <!-- Panel Header -->
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-edit panel-icon"></i>
+                        <div>
+                            <h2>Text Editor</h2>
+                            <p>Write or paste your content</p>
+                        </div>
+                    </div>
+                    <div class="score-display">
+                        <span class="score-label">Score:</span>
+                        <div class="score-badge" id="grammarScore">-</div>
+                    </div>
+                </div>
+
+                <!-- Statistics Bar -->
+                <div>
+                    <div class="stat-item">
+                        <i class="fas fa-font stat-icon"></i>
+                        <span class="stat-label">Words:</span>
+                        <span class="stat-value" id="wordCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-keyboard stat-icon"></i>
+                        <span class="stat-label">Characters:</span>
+                        <span class="stat-value" id="charCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-chart-line stat-icon"></i>
+                        <span class="stat-label">Level:</span>
+                        <span class="stat-value" id="complexity">Basic</span>
+                    </div>
+                    <button class="copy-btn" id="copyText">
+                        <i class="fas fa-copy"></i>
+                        <span>Copy</span>
+                    </button>
+                </div>
+
+                <!-- Controls Bar -->
+                <div class="controls-bar">
+                    <div class="control-group">
+                        <label class="control-label">Goal:</label>
+                        <select id="writingGoal" class="control-select">
+                            <option value="none">General</option>
+                            <option value="academic">Academic</option>
+                            <option value="business">Business</option>
+                            <option value="email">Email</option>
+                            <option value="creative">Creative</option>
+                            <option value="technical">Technical</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Tone:</label>
+                        <select id="writingTone" class="control-select">
+                            <option value="none">Neutral</option>
+                            <option value="formal">Formal</option>
+                            <option value="informal">Informal</option>
+                            <option value="professional">Professional</option>
+                            <option value="friendly">Friendly</option>
+                            <option value="technical">Technical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Editor Content -->
+                <div class="editor-content">
+                    <textarea 
+                        id="inputText" 
+                        class="text-editor"
+                        placeholder="Start typing or paste your text here to begin grammar checking and style analysis..."
+                        spellcheck="false"
+                    ></textarea>
+                    <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx,.txt" hidden>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <button id="checkGrammar" class="btn btn-primary">
+                        <span id="buttonText">Analyze Text</span>
+                        <div id="loadingIcon" class="loading-spinner hidden">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                    <button id="acceptAll" class="btn btn-secondary" disabled>
+                        <i class="fas fa-check-double"></i>
+                        <span>Accept All</span>
+                    </button>
+                    <button id="synonymBtn" class="btn btn-outline" title="Find synonyms for selected words (Alt+S)">
+                        <i class="fas fa-book"></i>
+                        <span>Find Synonyms</span>
+                    </button>
+                    <button id="uploadFileBtn" class="btn btn-outline">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload File</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Panel -->
+            <section class="results-panel">
+                <!-- Panel Header -->
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-chart-bar panel-icon"></i>
+                        <div>
+                            <h2>Analysis Results</h2>
+                            <p>Grammar and style insights</p>
+                        </div>
+                    </div>
+                    <div class="score-display">
+                        <span class="score-label">Overall:</span>
+                        <div class="score-badge" id="overallScore">-</div>
+                    </div>
+                </div>
+
+                <!-- Metrics Dashboard -->
+                <div class="metrics-dashboard">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-star metric-icon"></i>
+                            <span class="metric-label">Quality</span>
+                        </div>
+                        <div class="metric-value" id="qualityScore">-</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-book-reader metric-icon"></i>
+                            <span class="metric-label">Reading Level</span>
+                        </div>
+                        <div class="metric-value" id="readingLevel">-</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-link metric-icon"></i>
+                            <span class="metric-label">Coherence</span>
+                        </div>
+                        <div class="metric-value" id="coherenceScore">-</div>
+                    </div>
+                </div>
+
+                <!-- Analysis Tabs -->
+                <div class="analysis-tabs">
+                    <button class="tab-btn active" data-tab="corrections">
+                        <i class="fas fa-spell-check"></i>
+                        <span>Corrections</span>
+                    </button>
+                    <button class="tab-btn" data-tab="documentAnalysis">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Document</span>
+                    </button>
+                    <button class="tab-btn" data-tab="paragraphAnalysis">
+                        <i class="fas fa-paragraph"></i>
+                        <span>Paragraphs</span>
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <div id="corrections" class="tab-panel active">
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h3 class="empty-title">Ready to Analyze</h3>
+                            <p class="empty-text">Enter your text and click "Analyze Text" to get detailed grammar and style suggestions.</p>
+                        </div>
+                        <div id="correctionsContent" class="corrections-content" style="display: none;">
+                            <!-- Grammar corrections will be displayed here -->
+                        </div>
+                    </div>
+
+                    <div id="documentAnalysis" class="tab-panel">
+                        <div class="analysis-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-chart-pie"></i>
+                                Document Metrics
+                            </h4>
+                            <div class="analysis-grid" id="documentMetrics">
+                                <div class="analysis-item">
+                                    <span class="analysis-label">Ready for analysis</span>
+                                    <span class="analysis-value">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-book-open"></i>
+                                Readability Analysis
+                            </h4>
+                            <div class="analysis-grid" id="readabilityScores">
+                                <div class="analysis-item">
+                                    <span class="analysis-label">Ready for analysis</span>
+                                    <span class="analysis-value">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="paragraphAnalysis" class="tab-panel">
+                        <div class="analysis-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-list-ol"></i>
+                                Paragraph Breakdown
+                            </h4>
+                            <div id="paragraphContent">
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-paragraph"></i>
+                                    </div>
+                                    <h3 class="empty-title">No Analysis Yet</h3>
+                                    <p class="empty-text">Analyze your text to see paragraph-by-paragraph feedback.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Bar -->
+                <div class="export-bar">
+                    <button id="downloadPDF" class="btn btn-outline">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>Export PDF Report</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Synonym Tooltip -->
+    <div id="synonymTooltip" class="synonym-tooltip">
+        <div class="tooltip-header">
+            <span class="tooltip-title">Synonyms</span>
+            <button class="tooltip-close" id="closeTooltip">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="synonymContent" class="synonym-content">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <!-- Review Section -->
+    <section class="review-section">
+        <div class="review-container">
+            <div class="review-header">
+                <h2>📝 Share Your Experience</h2>
+                <p>Help us improve OpenGrammar by sharing your feedback</p>
+            </div>
+            <div class="review-form-container">
+                <form id="reviewForm" class="review-form">
+                    <div class="form-group">
+                        <label for="reviewName">Name (Optional)</label>
+                        <input type="text" id="reviewName" name="reviewName" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewRating">Rating</label>
+                        <div class="star-rating" id="starRating">
+                            <i class="fas fa-star" data-rating="1"></i>
+                            <i class="fas fa-star" data-rating="2"></i>
+                            <i class="fas fa-star" data-rating="3"></i>
+                            <i class="fas fa-star" data-rating="4"></i>
+                            <i class="fas fa-star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="reviewRating" name="reviewRating" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewMessage">Your Review</label>
+                        <textarea id="reviewMessage" name="reviewMessage" rows="4" placeholder="Tell us about your experience with OpenGrammar..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary review-submit">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Review
+                    </button>
+                </form>
+                <div class="review-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalReviews">0</span>
+                        <span class="stat-label">Reviews</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="averageRating">5.0</span>
+                        <span class="stat-label">⭐ Average</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">About OpenGrammar</h2>
+                <button class="modal-close" data-modal="aboutModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>OpenGrammar is a cutting-edge, AI-powered grammar checking tool hosted on <strong>edtechtools.me</strong>. Our mission: <em>"Time to contribute back to the global community"</em> - developing open source solutions to democratize access to powerful writing tools.</p>
+                
+                <div class="open-source-notice">
+                    <i class="fas fa-heart text-red-500"></i>
+                    <p><strong>Open Source Mission!</strong> We believe quality writing tools shouldn't be locked behind paywalls. Every writer deserves the power of AI to enhance their craft. Join us in making writing better for everyone!</p>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Grammar & Spelling</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-palette"></i>
+                        <span>Style Analysis</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Readability Metrics</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Document Structure</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-book"></i>
+                        <span>Synonym Suggestions</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-code-branch"></i>
+                        <span>Open Source</span>
+                    </div>
+                </div>
+                
+                <div class="github-section">
+                    <h3>🚀 Contribute to OpenGrammar</h3>
+                    <p>Join our community on GitHub and help make writing better for everyone!</p>
+                    <a href="https://github.com/muhammadmuneeb007" target="_blank" class="github-btn">
+                        <i class="fab fa-github"></i>
+                        Visit GitHub Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Contact Us</h2>
+                <button class="modal-close" data-modal="contactModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="contactName">Name</label>
+                        <input type="text" id="contactName" name="contactName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" name="contactEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactSubject">Subject</label>
+                        <input type="text" id="contactSubject" name="contactSubject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" name="contactMessage" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div id="instructionsModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">How to Use OpenGrammar</h2>
+                <button class="modal-close" data-modal="instructionsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="instructions-container">
+                    <div class="instruction-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>📝 Write or Paste Your Text</h3>
+                            <p>Start by typing or pasting your text into the main text area. OpenGrammar supports documents up to 10,000 characters.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>🔍 Click "Check Grammar"</h3>
+                            <p>Hit the "Check Grammar" button to analyze your text. Our AI will scan for grammar errors, style issues, and readability problems.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>✅ Review and Accept Suggestions</h3>
+                            <p>Click on highlighted issues to see detailed explanations and suggested corrections. Use "Accept" to apply changes or "Dismiss" to ignore.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>📖 Find Synonyms</h3>
+                            <p>Click "Find Synonyms" button, then select any word to see alternative word suggestions. Click on a synonym to replace the original word.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>📊 View Analytics</h3>
+                            <p>Check the analysis panel for readability scores, word count, sentence structure insights, and detailed writing metrics.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h3>📄 Export Your Document</h3>
+                            <p>Once satisfied with your text, use the "Export to PDF" button to download your improved document as a professional PDF.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="keyboard-shortcuts">
+                    <h3>⌨️ Keyboard Shortcuts</h3>
+                    <div class="shortcuts-grid">
+                        <div class="shortcut-item">
+                            <kbd>Ctrl + Enter</kbd>
+                            <span>Check Grammar</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Alt + S</kbd>
+                            <span>Toggle Synonym Mode</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Escape</kbd>
+                            <span>Close Tooltips/Exit Modes</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Ctrl + A</kbd>
+                            <span>Select All Text</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tips-section">
+                    <h3>💡 Pro Tips</h3>
+                    <ul class="tips-list">
+                        <li><strong>Context Matters:</strong> Our AI considers the context of your writing for more accurate suggestions.</li>
+                        <li><strong>Style Options:</strong> Different writing styles (academic, casual, business) may have different requirements.</li>
+                        <li><strong>Review Carefully:</strong> Always review suggestions before accepting them to maintain your unique voice.</li>
+                        <li><strong>Continuous Learning:</strong> The more you use OpenGrammar, the better it becomes at understanding your writing style.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Share OpenGrammar</h2>
+                <button class="modal-close" data-modal="shareModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Help others improve their writing!</p>
+                <div class="share-grid">
+                    <a href="#" class="share-btn twitter" data-platform="twitter">
+                        <i class="fab fa-twitter"></i>
+                        <span>Twitter</span>
+                    </a>
+                    <a href="#" class="share-btn facebook" data-platform="facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        <span>Facebook</span>
+                    </a>
+                    <a href="#" class="share-btn linkedin" data-platform="linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="#" class="share-btn whatsapp" data-platform="whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </a>
+                </div>
+                <div class="url-share">
+                    <input type="text" id="shareUrl" value="https://edtechtools.me" readonly>
+                    <button id="copyUrl" class="btn btn-outline">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Ensure jsPDF is available globally
+        if (typeof window.jspdf === 'undefined' && typeof jsPDF !== 'undefined') {
+            window.jspdf = { jsPDF };
+        }
+    </script>
+    
+    <!-- Original JavaScript File -->
+    <script src="js/modern_grammar_checker_js_original.js"></script>
+    <script src="js/synonymManager.js"></script>
+    <script src="js/themeManager.js"></script>
+    <script src="js/advancedAnalysis.js"></script>
+    <script src="js/textStatistics.js"></script>
+    <script src="js/mobileManager.js"></script>
+    <script src="js/writingTools.js"></script>
+    <script src="js/featureIntegration.js"></script>
+    
+    <!-- Skip Button Handler -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Make sure the skip button works
+            const skipButton = document.getElementById('skipLoadingBtn');
+            if (skipButton) {
+                skipButton.addEventListener('click', () => {
+                    console.log('Skip button clicked');
+                    if (window.grammarChecker) {
+                        window.grammarChecker.hideLoadingScreen();
+                    } else {
+                        // Fallback if grammarChecker isn't initialized yet
+                        const loadingScreen = document.getElementById('loadingScreen');
+                        if (loadingScreen) {
+                            loadingScreen.style.display = 'none';
+                            document.body.style.overflow = '';
+                            
+                            // Show main content
+                            const mainElements = ['.header', '.main', '.review-section'];
+                            mainElements.forEach(selector => {
+                                const elements = document.querySelectorAll(selector);
+                                elements.forEach(el => {
+                                    el.style.opacity = '1';
+                                    el.style.visibility = 'visible';
+                                });
+                            });
+                        }
+                    }
+                });
+            }
+            
+            // Make sure the 'S' key always works
+            document.addEventListener('keydown', (event) => {
+                if (event.key.toLowerCase() === 's' && !event.ctrlKey && !event.metaKey) {
+                    const loadingScreen = document.getElementById('loadingScreen');
+                    if (loadingScreen && loadingScreen.style.display !== 'none') {
+                        event.preventDefault();
+                        if (window.grammarChecker) {
+                            window.grammarChecker.hideLoadingScreen();
+                        } else {
+                            loadingScreen.style.display = 'none';
+                            document.body.style.overflow = '';
+                            
+                            // Show main content
+                            const mainElements = ['.header', '.main', '.review-section'];
+                            mainElements.forEach(selector => {
+                                const elements = document.querySelectorAll(selector);
+                                elements.forEach(el => {
+                                    el.style.opacity = '1';
+                                    el.style.visibility = 'visible';
+                                });
+                            });
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

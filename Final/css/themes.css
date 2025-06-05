@@ -1,0 +1,272 @@
+/* Theme Manager Styles */
+
+/* Theme Controls */
+.theme-controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.theme-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 1000;
+    min-width: 200px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.theme-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.theme-dropdown-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;    gap: 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem; /* 14px */
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;    transition: all 0.2s ease;
+    color: #374151;
+    font-size: 0.875rem; /* 14px */
+    position: relative;
+}
+
+.theme-option:hover {
+    background: #f9fafb;
+    color: #111827;
+}
+
+.theme-option.active {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.theme-option.active .theme-check {
+    opacity: 1;
+}
+
+.theme-check {
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    color: #10b981;
+}
+
+/* Light Theme */
+.theme-light {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border-primary: #e5e7eb;
+    --border-secondary: #d1d5db;
+    --accent-primary: #3b82f6;
+    --accent-secondary: #60a5fa;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme */
+.theme-dark {
+    --bg-primary: #111827;
+    --bg-secondary: #1f2937;
+    --bg-tertiary: #374151;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+    --border-primary: #374151;
+    --border-secondary: #4b5563;
+    --accent-primary: #60a5fa;
+    --accent-secondary: #93c5fd;
+    --success: #34d399;
+    --warning: #fbbf24;
+    --error: #f87171;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .theme-dropdown {
+    background: var(--bg-secondary);
+    border-color: var(--border-primary);
+    color: var(--text-primary);
+}
+
+.theme-dark .theme-dropdown-header {
+    border-color: var(--border-primary);
+    color: var(--text-primary);
+}
+
+.theme-dark .theme-option {
+    color: var(--text-secondary);
+}
+
+.theme-dark .theme-option:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.theme-dark .theme-option.active {
+    background: rgba(96, 165, 250, 0.1);
+    color: var(--accent-primary);
+}
+
+/* High Contrast Theme */
+.theme-high-contrast {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f0f0;
+    --bg-tertiary: #e0e0e0;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --text-tertiary: #666666;
+    --border-primary: #000000;
+    --border-secondary: #333333;
+    --accent-primary: #0000ff;
+    --accent-secondary: #0066cc;
+    --success: #008000;
+    --warning: #ff8800;
+    --error: #ff0000;
+    --shadow: rgba(0, 0, 0, 0.5);
+}
+
+.theme-high-contrast * {
+    border-width: 2px !important;
+}
+
+.theme-high-contrast .theme-dropdown {
+    background: var(--bg-primary);
+    border: 2px solid var(--border-primary);
+}
+
+/* Sepia Theme */
+.theme-sepia {
+    --bg-primary: #f4f1e8;
+    --bg-secondary: #ede7d3;
+    --bg-tertiary: #e6d7bb;
+    --text-primary: #3e2723;
+    --text-secondary: #5d4037;
+    --text-tertiary: #795548;
+    --border-primary: #d7cc8f;
+    --border-secondary: #bcaa5c;
+    --accent-primary: #8b4513;
+    --accent-secondary: #a0522d;
+    --success: #558b2f;
+    --warning: #f57f17;
+    --error: #d32f2f;
+    --shadow: rgba(62, 39, 35, 0.2);
+}
+
+.theme-sepia .theme-dropdown {
+    background: var(--bg-primary);
+    border-color: var(--border-primary);
+}
+
+/* Apply theme variables to existing elements */
+body {
+    background-color: var(--bg-primary, #ffffff);
+    color: var(--text-primary, #111827);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.loading-content,
+.editor-panel,
+.results-panel,
+.modal-content {
+    background-color: var(--bg-secondary, #f9fafb);
+    border-color: var(--border-primary, #e5e7eb);
+    color: var(--text-primary, #111827);
+}
+
+.btn-primary {
+    background-color: var(--accent-primary, #3b82f6);
+    border-color: var(--accent-primary, #3b82f6);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-secondary, #60a5fa);
+    border-color: var(--accent-secondary, #60a5fa);
+}
+
+.text-editor {
+    background-color: var(--bg-primary, #ffffff);
+    color: var(--text-primary, #111827);
+    border-color: var(--border-primary, #e5e7eb);
+}
+
+/* Mobile responsive theme controls */
+@media (max-width: 768px) {
+    .theme-controls {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1001;
+    }
+    
+    .theme-dropdown {
+        right: 0;
+        min-width: 180px;
+    }
+    
+    .theme-option {        padding: 14px 16px;
+        font-size: 1rem; /* 16px */
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .theme-toggle-btn,
+    .theme-dropdown,
+    .theme-option {
+        transition: none;
+    }
+}

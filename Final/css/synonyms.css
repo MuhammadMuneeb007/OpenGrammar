@@ -1,0 +1,668 @@
+/* OpenGrammar - Synonyms Styles */
+/* Dedicated CSS for synonym functionality and UI components */
+
+/* ==============================================
+   SYNONYM HIGHLIGHT STYLES
+   ============================================== */
+
+/* Base synonym highlight styling */
+.synonym-highlight {
+    background: linear-gradient(120deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
+    border-bottom: 2px solid rgba(59, 130, 246, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+    padding: 2px 4px;
+    margin: 0 1px;
+    position: relative;
+}
+
+.synonym-highlight:hover {
+    background: linear-gradient(120deg, rgba(59, 130, 246, 0.25) 0%, rgba(147, 51, 234, 0.25) 100%);
+    border-bottom-color: rgba(59, 130, 246, 0.8);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+/* Active/selected synonym */
+.synonym-highlight.active {
+    background: linear-gradient(120deg, rgba(59, 130, 246, 0.3) 0%, rgba(147, 51, 234, 0.3) 100%);
+    border-bottom-color: rgba(59, 130, 246, 1);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* ==============================================
+   SYNONYM POPUP/TOOLTIP STYLES
+   ============================================== */
+
+/* Main synonym popup container */
+.synonym-popup {
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    z-index: 1000;
+    min-width: 280px;
+    max-width: 320px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    backdrop-filter: blur(10px);
+    animation: synonymPopupFadeIn 0.2s ease-out;
+}
+
+/* Popup header */
+.synonym-popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.synonym-popup-title {
+    font-size: 0.875rem; /* 14px */
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.synonym-popup-close {
+    background: none;
+    border: none;
+    font-size: 1.125rem; /* 18px */
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.synonym-popup-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #374151;
+}
+
+/* Original word display */
+.synonym-original-word {
+    background: linear-gradient(120deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border-left: 3px solid #3b82f6;
+}
+
+.synonym-original-word strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+/* Synonyms list container */
+.synonym-suggestions {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+/* Individual synonym items */
+.synonym-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    margin: 4px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.synonym-item:hover {
+    background: rgba(59, 130, 246, 0.05);
+    border-color: rgba(59, 130, 246, 0.2);
+    transform: translateX(2px);
+}
+
+.synonym-item:active {
+    transform: translateX(0);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* Synonym word styling */
+.synonym-word {
+    font-weight: 500;
+    color: #1f2937;
+    flex-grow: 1;
+}
+
+/* Synonym confidence/quality indicator */
+.synonym-confidence {
+    font-size: 0.75rem; /* 12px */
+    color: #6b7280;
+    margin-left: 8px;
+}
+
+.synonym-confidence.high {
+    color: #10b981;
+}
+
+.synonym-confidence.medium {
+    color: #f59e0b;
+}
+
+.synonym-confidence.low {
+    color: #ef4444;
+}
+
+/* ==============================================
+   SYNONYM PANEL/SIDEBAR STYLES
+   ============================================== */
+
+/* Synonym panel container */
+.synonym-panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+}
+
+.synonym-panel-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.synonym-panel-icon {
+    color: #3b82f6;
+    margin-right: 8px;
+    font-size: 1.125rem; /* 18px */
+}
+
+.synonym-panel-title {
+    font-size: 1rem; /* 16px */
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+/* Synonym categories */
+.synonym-category {
+    margin-bottom: 16px;
+}
+
+.synonym-category-title {
+    font-size: 0.875rem; /* 14px */
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.synonym-category-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Synonym tags/chips */
+.synonym-tag {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 0.8125rem; /* 13px */
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.synonym-tag:hover {
+    background: #3b82f6;
+    color: #ffffff;
+    border-color: #3b82f6;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+/* ==============================================
+   SYNONYM LOADING AND STATES
+   ============================================== */
+
+/* Loading spinner for synonym fetching */
+.synonym-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #6b7280;
+}
+
+.synonym-loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: synonymSpin 1s linear infinite;
+    margin-right: 8px;
+}
+
+/* Error state */
+.synonym-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.875rem; /* 14px */
+    text-align: center;
+}
+
+/* Empty state */
+.synonym-empty {
+    text-align: center;
+    color: #6b7280;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* ==============================================
+   SYNONYM CONTEXT MENU
+   ============================================== */
+
+.synonym-context-menu {
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    z-index: 1001;
+    min-width: 180px;
+    animation: synonymPopupFadeIn 0.15s ease-out;
+}
+
+.synonym-context-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    cursor: pointer;    transition: background-color 0.2s ease;
+    font-size: 0.875rem; /* 14px */
+    color: #374151;
+}
+
+.synonym-context-item:hover {
+    background-color: #f3f4f6;
+}
+
+.synonym-context-item i {
+    margin-right: 8px;
+    width: 16px;
+    color: #6b7280;
+}
+
+/* ==============================================
+   SYNONYM TOOLTIP STYLES (Used by synonymManager.js)
+   ============================================== */
+
+/* Main synonym tooltip container - matches synonymManager.js */
+.synonym-tooltip {
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    padding: 0;
+    z-index: 1000;
+    min-width: 280px;
+    max-width: 320px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    backdrop-filter: blur(10px);
+    animation: synonymPopupFadeIn 0.2s ease-out;
+    display: none;
+}
+
+.synonym-tooltip.show {
+    display: block;
+}
+
+/* Synonym header - matches synonymManager.js structure */
+.synonym-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px 16px;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.synonym-header h4 {
+    font-size: 0.875rem; /* 14px */
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.synonym-header .close-btn {
+    background: none;
+    border: none;
+    font-size: 1rem; /* 16px */
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.synonym-header .close-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #374151;
+}
+
+/* Synonym content area - matches synonymManager.js */
+.synonym-content {
+    padding: 16px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.synonym-content .loading-text {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Synonym list container - matches synonymManager.js */
+.synonym-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Individual synonym items - matches synonymManager.js structure */
+.synonym-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    margin: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.875rem; /* 14px */
+}
+
+.synonym-item:hover {
+    background: rgba(59, 130, 246, 0.05);
+    border-color: rgba(59, 130, 246, 0.2);
+    transform: translateX(2px);
+}
+
+.synonym-item:active {
+    transform: translateX(0);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* Synonym word styling - matches synonymManager.js */
+.synonym-word {
+    font-weight: 500;
+    color: #1f2937;
+    flex-grow: 1;
+}
+
+/* Synonym arrow - matches synonymManager.js */
+.synonym-arrow {
+    color: #6b7280;
+    font-size: 0.75rem; /* 12px */
+    margin-left: 8px;
+    transition: transform 0.2s ease;
+}
+
+.synonym-item:hover .synonym-arrow {
+    transform: translateX(2px);
+    color: #3b82f6;
+}
+
+/* Text editor synonym mode - matches synonymManager.js */
+#inputText.synonym-mode {
+    cursor: crosshair !important;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+#inputText.synonym-mode:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+@media (max-width: 768px) {
+    .synonym-popup {
+        min-width: 250px;
+        max-width: 90vw;
+        margin: 0 10px;
+    }
+    
+    .synonym-panel {
+        padding: 16px;
+    }
+    
+    .synonym-category-items {
+        gap: 4px;
+    }
+    
+    .synonym-tag {
+        font-size: 0.75rem; /* 12px */
+        padding: 3px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .synonym-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 280px;
+        max-width: 90vw;
+    }
+}
+
+/* ==============================================
+   ANIMATIONS
+   ============================================== */
+
+@keyframes synonymPopupFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes synonymSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Pulse animation for loading highlights */
+@keyframes synonymPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.synonym-highlight.loading {
+    animation: synonymPulse 2s infinite;
+}
+
+/* ==============================================
+   ACCESSIBILITY STYLES
+   ============================================== */
+
+/* Focus styles for keyboard navigation */
+.synonym-highlight:focus,
+.synonym-item:focus,
+.synonym-tag:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .synonym-highlight {
+        border-bottom-width: 3px;
+        background: rgba(0, 0, 0, 0.1);
+    }
+    
+    .synonym-popup {
+        border-width: 2px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .synonym-highlight,
+    .synonym-item,
+    .synonym-tag,
+    .synonym-popup {
+        transition: none;
+        animation: none;
+    }
+}
+
+/* ==============================================
+   DARK MODE SUPPORT
+   ============================================== */
+
+@media (prefers-color-scheme: dark) {
+    .synonym-popup {
+        background: #1f2937;
+        border-color: #374151;
+        color: #f9fafb;
+    }
+    
+    .synonym-popup-title {
+        color: #f9fafb;
+    }
+    
+    .synonym-popup-close {
+        color: #9ca3af;
+    }
+    
+    .synonym-popup-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #f9fafb;
+    }
+    
+    .synonym-original-word {
+        background: rgba(59, 130, 246, 0.2);
+        border-left-color: #60a5fa;
+    }
+    
+    .synonym-item:hover {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .synonym-word {
+        color: #f9fafb;
+    }
+    
+    .synonym-panel {
+        background: #1f2937;
+        border-color: #374151;
+    }
+    
+    .synonym-panel-title {
+        color: #f9fafb;
+    }
+    
+    .synonym-tag {
+        background: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+    }
+    
+    .synonym-tag:hover {
+        background: #3b82f6;
+        border-color: #3b82f6;
+    }
+    
+    .synonym-context-menu {
+        background: #1f2937;
+        border-color: #374151;
+    }
+    
+    .synonym-context-item {
+        color: #f9fafb;
+    }
+    
+    .synonym-context-item:hover {
+        background-color: #374151;
+    }
+}
+
+/* ==============================================
+   UTILITY CLASSES
+   ============================================== */
+
+.synonym-hidden {
+    display: none !important;
+}
+
+.synonym-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.synonym-no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Custom scrollbar for synonym suggestions */
+.synonym-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.synonym-suggestions::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.synonym-suggestions::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.synonym-suggestions::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
